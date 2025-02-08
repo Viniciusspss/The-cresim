@@ -1,4 +1,5 @@
 {
+  "type": "module",
   "name": "the-cresim",
   "scripts": {
     "start": "babel-node index.js",
