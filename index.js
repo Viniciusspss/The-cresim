@@ -32,6 +32,11 @@ const main = async () => {
           case 1:
             const tempo = parseInt(await useQuestion("\nDigite o tempo que deseja dormir (em segundos): "));
             dormir(personagemSelecionado,tempo)
+            console.log(`${personagemSelecionado.nome} esta dormindo...`)
+
+            await new Promise(resolve => setTimeout(resolve, tempo * 1000));
+            console.log(`${personagemSelecionado.nome} acordou!`)
+            
             break;
         
           default:
@@ -49,7 +54,7 @@ const main = async () => {
         break;
     }
 
-    console.log("FIM DE JOGO");        
+    console.log("\nFIM DE JOGO");        
   }
 }
 

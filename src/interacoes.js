@@ -1,6 +1,9 @@
 import { atualizaPersonagem } from "./personagem"
 
-export async function dormir (personagem, tempo){
+export function dormir (personagem, tempo){
+    if(tempo < 0){
+        console.log("Insira um tempo válido")
+    }
     const tempoDormido = tempo/5
     let pontosEnergia = tempoDormido*4
     for (let i = 1; i < tempoDormido; i++) {
@@ -10,4 +13,5 @@ export async function dormir (personagem, tempo){
     personagem.energia += pontosEnergia
 
     atualizaPersonagem(personagem)
+
 }
