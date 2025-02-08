@@ -1,5 +1,6 @@
 import { exibeMenuInicial } from './src/services/mensagens/menus.js'
 import { menuCriarPersoangem } from './src/services/menus/menu-inicial.js'
+import { exibirPersonagens, exibirInteracoes } from './src/services/mensagens/menus.js';
 
 const main = async () => {
   let opcao = 0;
@@ -16,7 +17,12 @@ const main = async () => {
         break;
 
       case 2:
-        console.log('Não implementado!')
+        let personagemSelecionado = null
+        do{
+          personagemSelecionado = await exibirPersonagens()
+        }while (!personagemSelecionado)
+        
+        await exibirInteracoes(personagemSelecionado)
         break;
 
       case 0:

@@ -1,4 +1,5 @@
 import { useQuestion } from '../question/use-question'
+import { buscaPersonagens } from '../../personagem'
 
 export async function exibeMenuInicial() {
   console.log("\n============== MENU ==============")
@@ -40,4 +41,39 @@ export async function exibeMenuAspiracoes() {
       console.log("Opção inválida. Escolha um número de 1 a 5.");
       return null
   }
+}
+
+export async function exibirPersonagens(){
+  console.log("\n============== PERSONAGENS ==============")
+  
+  const personagens = buscaPersonagens()
+
+    personagens.forEach((personagem, i) => {
+      console.log(`${i+1}. ${personagem.nome}`)
+    });
+  console.log("==========================================")
+
+  try {
+    const personagemSelecionado = parseInt(await useQuestion("\nSelecione a opção: "));
+    return personagens[personagemSelecionado - 1].nome
+  } catch (error) {
+    console.log("\nEsse personagem não existe")
+    return null
+  }
+  
+}
+
+export async function exibirInteracoes(personagemSelecionado){
+  if(!personagemSelecionado){
+    console.log("\nNenhum personagem selecionado")
+    return null
+  }
+
+  console.log(`\nPersonagem selecionado: ${personagemSelecionado}`)
+  console.log("\n============== ATIVIDADES ==============")
+  console.log("1. Dormir")
+  console.log("==========================================")
+
+  return parseInt(await useQuestion("\nSelecione a opção: "));
+
 }
