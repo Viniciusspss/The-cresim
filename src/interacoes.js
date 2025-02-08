@@ -1,3 +1,5 @@
+import { atualizaPersonagem } from "./personagem"
+
 export async function dormir (personagem, tempo){
     const tempoDormido = tempo/5
     let pontosEnergia = tempoDormido*4
@@ -6,8 +8,6 @@ export async function dormir (personagem, tempo){
     }
 
     personagem.energia += pontosEnergia
-    
-    if (personagem.energia > 32) {
-        personagem.energia = 32
-    }
+
+    atualizaPersonagem(personagem)
 }
