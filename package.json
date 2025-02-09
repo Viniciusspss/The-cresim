@@ -1,5 +1,4 @@
 {
-  "type": "module",
   "name": "the-cresim",
   "scripts": {
     "start": "babel-node index.js",
@@ -7,13 +6,14 @@
   },
   "devDependencies": {
     "@babel/cli": "^7.8.4",
-    "@babel/core": "^7.6.2",
+    "@babel/core": "^7.26.8",
     "@babel/node": "^7.6.2",
-    "@babel/preset-env": "^7.9.5"
+    "@babel/preset-env": "^7.26.8",
+    "babel-jest": "^29.7.0"
   },
   "dependencies": {
     "axios": "^1.7.9",
-    "jest": "^25.4.0",
+    "jest": "^29.7.0",
     "node-localstorage": "^2.1.6"
   }
 }

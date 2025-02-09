@@ -44,14 +44,19 @@ export async function exibeMenuAspiracoes() {
 }
 
 export async function exibirPersonagens(){
-  console.log("\n============== PERSONAGENS ==============")
-  
   const personagens = buscaPersonagens()
 
+  if (personagens.length > 0) {
+    console.log("\n============== PERSONAGENS ==============")
     personagens.forEach((personagem, i) => {
       console.log(`${i+1}. ${personagem.nome}`)
     });
   console.log("==========================================")
+  }else{
+    console.log("Você não possui nenhum personagem criado!")
+    return null
+  }
+
 
   try {
     const personagemSelecionado = parseInt(await useQuestion("\nSelecione a opção: "));

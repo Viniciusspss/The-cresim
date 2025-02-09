@@ -7,7 +7,7 @@ import { getDados } from './src/services/requisicoes/requisicoes.js';
 const main = async () => {
   let opcao = 0;
   let finalizarJogo = false 
-
+  
   while (!finalizarJogo) {
     do {
       opcao = await exibeMenuInicial()
@@ -19,11 +19,12 @@ const main = async () => {
         break;
 
       case 2:
-        let personagemSelecionado = null
+        let personagemSelecionado = await exibirPersonagens()
 
-        do{
-          personagemSelecionado = await exibirPersonagens()
-        }while (!personagemSelecionado)
+        if (!personagemSelecionado) {
+          break; 
+        }
+
         console.clear()
 
         const interacaoSelecionada = await exibirInteracoes(personagemSelecionado)
