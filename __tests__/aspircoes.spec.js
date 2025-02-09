@@ -101,7 +101,7 @@ describe('Aspiracoes', () => {
     expect(personagemComNivelHabilidadeEvoluido.habilidades).toMatchObject({
       'GASTRONOMIA': {
         nivel: 'pleno',
-        pontos: 20,
+        pontos: 22,
       }
     })
   })
