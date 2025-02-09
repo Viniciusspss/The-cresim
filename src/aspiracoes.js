@@ -25,7 +25,7 @@ export function defineAspiracao(personagem, aspiracao) {
         nivel: 'junior',
         pontos: 0,
       },
-    }
+    },
   }
 
   atualizaPersonagem(personagemAtualizado)
@@ -33,7 +33,7 @@ export function defineAspiracao(personagem, aspiracao) {
   return personagemAtualizado
 }
 
-export function evoluirHabilidade(personagem, habilidade, item) {
+export async function evoluirHabilidade(personagem, habilidade, item) {
   if (personagem.energia < 4) {
     throw new Error('Energia insuficiente para treinar')
   }
@@ -57,7 +57,6 @@ export function evoluirHabilidade(personagem, habilidade, item) {
   }
 
   personagemComHabilidadeEvoluida.energia -= 4
-
 
   atualizaPersonagem(personagemComHabilidadeEvoluida)
 

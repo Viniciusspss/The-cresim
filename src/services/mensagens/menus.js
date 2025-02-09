@@ -71,8 +71,8 @@ export async function exibirInteracoes(personagemSelecionado){
   console.log(`\nPersonagem selecionado: ${personagemSelecionado.nome}`)
   console.log("\n============== ATIVIDADES ==============")
   console.log("1. Dormir")
+  console.log("3. Comprar item")
   console.log("==========================================")
 
   return parseInt(await useQuestion("\nSelecione a opção: "));
-
 }

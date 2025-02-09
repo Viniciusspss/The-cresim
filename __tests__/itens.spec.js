@@ -4,9 +4,9 @@ import { criarPersonagem } from "../src/personagem"
 describe('Itens', () => {
 	it('Deve conseguir comprar um item de habilidade', async () => {
 		const personagem = criarPersonagem()
-		const itens = await buscarItens()
-		const item = {...itens[0]}
+		const [item] = await buscarItens()
 
+		personagem.cresceleons = 3000
 		const novoPersonagem = await comprarItem(personagem, item)
 
 		expect(novoPersonagem).toMatchObject({
@@ -22,6 +22,6 @@ describe('Itens', () => {
 		personagem.cresceleons = 0
 		const item = {...itens[0], preco: personagem.cresceleons + 1}
 
-		await expect(comprarItem(personagem, item)).rejects.toThrow('Você não tem dinheiro suficiente para comprar este item')
+		await expect(comprarItem(personagem, item)).rejects.toThrow('Cresceleons insuficientes')
 	})
 })
