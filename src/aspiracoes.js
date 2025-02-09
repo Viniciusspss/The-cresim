@@ -1,4 +1,4 @@
-import { atualizaPersonagem } from './personagem'
+import { atualizaPersonagem } from './personagem.js'
 
 export function defineAspiracao(personagem, aspiracao) {
   const personagemAtualizado = {

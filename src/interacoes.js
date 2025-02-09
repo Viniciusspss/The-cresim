@@ -1,4 +1,4 @@
-import { atualizaPersonagem } from "./personagem"
+import { atualizaPersonagem } from "./personagem.js"
 
 export function dormir (personagem, tempo){
     const TEMPO_INVALIDO = 0;
@@ -22,7 +22,7 @@ export function dormir (personagem, tempo){
 }
 
 
-export function trabalhar (personagem ,empregos, idEmprego){
+export function trabalhar (personagem, empregos, idEmprego){
     const ENERGIA_GASTA = 10
     const TEMPO_TRABALHO = 20000
 
@@ -37,9 +37,6 @@ export function trabalhar (personagem ,empregos, idEmprego){
     if (personagem.energia <= 10) {
         
     }
-
     personagem.energia -= ENERGIA_GASTA
     personagem.vida -= TEMPO_TRABALHO
-
-
 }

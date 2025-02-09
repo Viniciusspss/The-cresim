@@ -1,7 +1,7 @@
-import { useQuestion } from "../question/use-question";
-import { criarPersonagem } from "../../personagem";
-import { exibeMenuAspiracoes } from "../mensagens/menus";
-import { defineAspiracao } from "../../aspiracoes";
+import { useQuestion } from "../question/use-question.js";
+import { criarPersonagem } from "../../personagem.js";
+import { exibeMenuAspiracoes } from "../mensagens/menus.js";
+import { defineAspiracao } from "../../aspiracoes.js";
 
 export async function menuCriarPersoangem() {
   const nome = await useQuestion("\nQual o nome do personagem? ");
