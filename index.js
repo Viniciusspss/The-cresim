@@ -2,7 +2,7 @@ import { useQuestion } from './src/services/question/use-question.js';
 import { exibeMenuInicial } from './src/services/mensagens/menus.js'
 import { menuCriarPersoangem } from './src/services/menus/menu-inicial.js'
 import { exibirPersonagens, exibirInteracoes } from './src/services/mensagens/menus.js';
-import { dormir } from './src/interacoes.js';
+import { dormir, trabalhar } from './src/interacoes.js';
 
 const main = async () => {
   let opcao = 0;

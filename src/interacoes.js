@@ -20,3 +20,26 @@ export function dormir (personagem, tempo){
     atualizaPersonagem(personagem)
 
 }
+
+
+export function trabalhar (personagem ,empregos, idEmprego){
+    const ENERGIA_GASTA = 10
+    const TEMPO_TRABALHO = 20000
+
+    const emprego = empregos.find(emp => emp.id === idEmprego)
+    const salarioJunior = emprego.salario.find(s => s.nivel === "JUNIOR").valor
+
+    if(personagem.energia <= 4){
+        console.log("Seu personagem está muito cansado e não pode trabalhar!")
+        return 
+    }
+    
+    if (personagem.energia <= 10) {
+        
+    }
+
+    personagem.energia -= ENERGIA_GASTA
+    personagem.vida -= TEMPO_TRABALHO
+
+
+}

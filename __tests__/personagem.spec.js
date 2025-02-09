@@ -1,4 +1,4 @@
-import { dormir } from "../src/interacoes"
+import { dormir,trabalhar } from "../src/interacoes"
 import { atualizaPersonagem, criarPersonagem } from "../src/personagem"
 
 describe('Personagem', () => {
@@ -43,5 +43,24 @@ describe('Personagem', () => {
     dormir(personagem,10)
 
     expect(personagem.energia).toBe(20)
+  })
+
+  it('Deve perder os pontos de energia ao trabalhar uma jornada padrão ', async ()=> {
+    const trabalhos = [
+      {
+          "id": 1,
+          "cargo": "Jogador de Dota",
+          "categoria": "JOGOS",
+          "salario": [
+              {"nivel": "JUNIOR", "valor": 160},
+              {"nivel": "PLENO", "valor": 250},
+              {"nivel": "SENIOR", "valor": 340}
+          ]
+      }
+    ]
+
+    const personagem = criarPersonagem("Cresinho")
+    const r = trabalhar(trabalhos, 1)
+    // expect(personagem.energia).toBe(22)
   })
 })
