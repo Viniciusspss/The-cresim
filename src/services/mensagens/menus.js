@@ -55,7 +55,7 @@ export async function exibirPersonagens(){
 
   try {
     const personagemSelecionado = parseInt(await useQuestion("\nSelecione a opção: "));
-    return personagens[personagemSelecionado - 1].nome
+    return personagens[personagemSelecionado - 1]
   } catch (error) {
     console.log("\nEsse personagem não existe")
     return null
@@ -68,8 +68,7 @@ export async function exibirInteracoes(personagemSelecionado){
     console.log("\nNenhum personagem selecionado")
     return null
   }
-
-  console.log(`\nPersonagem selecionado: ${personagemSelecionado}`)
+  console.log(`\nPersonagem selecionado: ${personagemSelecionado.nome}`)
   console.log("\n============== ATIVIDADES ==============")
   console.log("1. Dormir")
   console.log("==========================================")

@@ -1,3 +1,4 @@
+import { dormir } from "../src/interacoes"
 import { atualizaPersonagem, criarPersonagem } from "../src/personagem"
 
 describe('Personagem', () => {
@@ -34,5 +35,13 @@ describe('Personagem', () => {
     const personagemAtualizado = atualizaPersonagem(personagem)
 
     expect(personagemAtualizado.energia).toBe(0)
+  })
+
+  it('Deve conseguir dormir e receber seus pontos de energia  ', async ()=> {
+    const personagem = criarPersonagem("Cresinho")
+    personagem.energia = 10
+    dormir(personagem,10)
+
+    expect(personagem.energia).toBe(20)
   })
 })
