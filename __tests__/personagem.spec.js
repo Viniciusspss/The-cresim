@@ -1,5 +1,6 @@
-import { dormir,trabalhar } from "../src/interacoes"
+import { dormir, trabalhar } from "../src/interacoes"
 import { atualizaPersonagem, criarPersonagem } from "../src/personagem"
+import { defineAspiracao } from "../src/aspiracoes"
 import { getDados } from "../src/services/requisicoes/requisicoes"
 
 describe('Personagem', () => {
@@ -49,10 +50,11 @@ describe('Personagem', () => {
 
   it('Deve perder os pontos de energia ao trabalhar uma jornada padrão ', async ()=> {
     const urlEmpregos = "https://emilyspecht.github.io/the-cresim/empregos.json"
-    const trabalhos = await getDados(urlEmpregos) 
+    const trabalhos = await getDados(urlEmpregos)
 
     const personagem = criarPersonagem("Cresinho")
-    const personagemAtualizado = atualizaPersonagem(personagem)
+    const personagemAtualizado = defineAspiracao(personagem, "JOGOS")
+
     trabalhar(personagemAtualizado,trabalhos, 1)
 
     expect(personagemAtualizado.energia).toBe(22)
@@ -63,22 +65,34 @@ describe('Personagem', () => {
     const trabalhos = await getDados(urlEmpregos) 
 
     const personagem = criarPersonagem("Cresinho")
-    const personagemAtualizado = atualizaPersonagem(personagem)
+    const personagemAtualizado = defineAspiracao(personagem, "JOGOS")
+
     trabalhar(personagemAtualizado,trabalhos, 1)
 
     expect(personagemAtualizado.cresceleons).toBe(1660)
   })
 
-  it('Deve receber o salario equivalente quando começar a trabalhar com os pontos de energia menores que 10 ', async ()=> {
+  it('Deve receber o salario equivalente quando começar a trabalhar com os pontos de energia menores que 10 ', async () => {
     const urlEmpregos = "https://emilyspecht.github.io/the-cresim/empregos.json"
     const trabalhos = await getDados(urlEmpregos) 
 
     const personagem = criarPersonagem("Cresinho")
-    personagem.energia = 9
-    const personagemAtualizado = atualizaPersonagem(personagem)
+    const personagemAtualizado = defineAspiracao(personagem, "JOGOS")
+    personagemAtualizado.energia = 9
+
     trabalhar(personagemAtualizado,trabalhos, 1)
-    expect(personagem.cresceleons).toBe(1607.2)
+    expect(personagemAtualizado.cresceleons).toBe(1607.2)
   })
 
-  
+  it('Deve validar para que o Cresim não consiga começar a trabalhar com os pontos de energia menores que 4', async () => {
+    const urlEmpregos = "https://emilyspecht.github.io/the-cresim/empregos.json"
+    const trabalhos = await getDados(urlEmpregos)
+
+    const personagem = criarPersonagem("Cresinho")
+    personagem.energia = 3
+    const personagemAtualizado = defineAspiracao(personagem, "JOGOS")
+
+    const resultado = trabalhar(personagemAtualizado,trabalhos, 1)
+    expect(resultado).toBeNull()
+  })
 })

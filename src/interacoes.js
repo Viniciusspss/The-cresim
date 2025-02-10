@@ -28,13 +28,13 @@ export function dormir (personagem, tempo){
 export function trabalhar (personagem, empregos, idEmprego){
     const emprego = empregos.find(emp => emp.id === idEmprego)
 
-    //DEVE SER SUBSTITUIDO PELO SALARIO DIÁRIO DO PERSONAGEM (USEI SALARIOJUNIOR PARA TESTE DE FUNÇÃO)
-    const salarioDiario = emprego.salario.find(s => s.nivel === "JUNIOR").valor
+    const nivelHabilidade = personagem.habilidades[emprego.categoria].nivel.toUpperCase()
+    const salarioDiario = emprego.salario.find(s => s.nivel === nivelHabilidade).valor
     const personagemAtualizado = personagem
 
     if(personagemAtualizado.energia <= 4){
         console.log("Seu personagem está muito cansado e não pode trabalhar!")
-        return 
+        return null
     }
 
     const ENERGIA_GASTA = 10
@@ -62,10 +62,6 @@ export function trabalhar (personagem, empregos, idEmprego){
     const salarioTotal = RECALCULO_SALARIO_CRESCIM_CANSADO + SALARIO_CRESCIM_DESCANSADO
     //FIM CÁLCULO SALÁRIO
 
-   
-
-    
-    
     if (personagemAtualizado.energia <= 10) {
 
         personagemAtualizado.cresceleons += salarioTotal
