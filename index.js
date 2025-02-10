@@ -1,13 +1,13 @@
 import { useQuestion } from './src/services/question/use-question.js';
-import { exibeMenuInicial } from './src/services/mensagens/menus.js'
+import { exibeMenuInicial, exibirEmpregos, exibirPersonagens, exibirInteracoes } from './src/services/mensagens/menus.js'
 import { menuCriarPersoangem } from './src/services/menus/menu-inicial.js'
-import { exibirPersonagens, exibirInteracoes } from './src/services/mensagens/menus.js';
-import { dormir } from './src/interacoes.js';
+import { dormir, trabalhar } from './src/interacoes.js';
+import { getDados } from './src/services/requisicoes/requisicoes.js';
 
 const main = async () => {
   let opcao = 0;
   let finalizarJogo = false 
-
+  
   while (!finalizarJogo) {
     do {
       opcao = await exibeMenuInicial()
@@ -19,11 +19,12 @@ const main = async () => {
         break;
 
       case 2:
-        let personagemSelecionado = null
+        let personagemSelecionado = await exibirPersonagens()
 
-        do{
-          personagemSelecionado = await exibirPersonagens()
-        }while (!personagemSelecionado)
+        if (!personagemSelecionado) {
+          break; 
+        }
+
         console.clear()
 
         const interacaoSelecionada = await exibirInteracoes(personagemSelecionado)
@@ -37,6 +38,20 @@ const main = async () => {
             await new Promise(resolve => setTimeout(resolve, tempo * 1000));
             console.log(`${personagemSelecionado.nome} acordou!`)
             
+            break;
+
+          case 2:     
+            const urlEmprego = "https://emilyspecht.github.io/the-cresim/empregos.json"
+            const empregos = await getDados(urlEmprego) 
+            const opcaoTrabalho = await exibirEmpregos(personagemSelecionado, empregos)  
+            const TEMPO_TRABALHO = 20000           
+           
+              
+            trabalhar(personagemSelecionado, empregos, opcaoTrabalho)
+            
+            console.log(`\n${personagemSelecionado.nome} esta trabalhando...`)
+            await new Promise(resolve => setTimeout(resolve, TEMPO_TRABALHO));
+            console.log(`\n${personagemSelecionado.nome} terminou sua jornada de trabalho!`)            
             break;
         
           default:
@@ -53,9 +68,9 @@ const main = async () => {
         console.log("Opção inválida.");
         break;
     }
-
-    console.log("\nFIM DE JOGO");        
+           
   }
+  console.log("\nFIM DE JOGO"); 
 }
 
 main()

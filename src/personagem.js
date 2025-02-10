@@ -1,4 +1,4 @@
-import { useLocalStorage } from "./services/local-storage/use-local-storage"
+import { useLocalStorage } from "./services/local-storage/use-local-storage.js"
 
 const localStore = useLocalStorage()
 

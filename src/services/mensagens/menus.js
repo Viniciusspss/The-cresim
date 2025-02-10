@@ -1,5 +1,5 @@
-import { useQuestion } from '../question/use-question'
-import { buscaPersonagens } from '../../personagem'
+import { useQuestion } from '../question/use-question.js'
+import { buscaPersonagens } from '../../personagem.js'
 
 export async function exibeMenuInicial() {
   console.log("\n============== MENU ==============")
@@ -44,14 +44,19 @@ export async function exibeMenuAspiracoes() {
 }
 
 export async function exibirPersonagens(){
-  console.log("\n============== PERSONAGENS ==============")
-  
   const personagens = buscaPersonagens()
 
+  if (personagens.length > 0) {
+    console.log("\n============== PERSONAGENS ==============")
     personagens.forEach((personagem, i) => {
       console.log(`${i+1}. ${personagem.nome}`)
     });
   console.log("==========================================")
+  }else{
+    console.log("Você não possui nenhum personagem criado!")
+    return null
+  }
+
 
   try {
     const personagemSelecionado = parseInt(await useQuestion("\nSelecione a opção: "));
@@ -71,6 +76,20 @@ export async function exibirInteracoes(personagemSelecionado){
   console.log(`\nPersonagem selecionado: ${personagemSelecionado.nome}`)
   console.log("\n============== ATIVIDADES ==============")
   console.log("1. Dormir")
+  console.log("2. Trabalhar")
+  console.log("==========================================")
+
+  return parseInt(await useQuestion("\nSelecione a opção: "));
+
+}
+
+export async function exibirEmpregos(personagemSelecionado, empregos) {
+  console.clear()
+  console.log(`\nPersonagem selecionado: ${personagemSelecionado.nome}`)
+  console.log("\n============== EMPREGOS ==============")
+  empregos.forEach((emprego, index) => {
+    console.log(`${index + 1}. ${emprego.cargo}`)
+  })
   console.log("==========================================")
 
   return parseInt(await useQuestion("\nSelecione a opção: "));
