@@ -81,7 +81,7 @@ describe('Personagem', () => {
     personagemAtualizado.energia = 9
 
     trabalhar(personagemAtualizado,trabalhos, 1)
-    expect(personagem.cresceleons).toBe(1607.2)
+    expect(personagemAtualizado.cresceleons).toBe(1607.2)
   })
 
   it('Deve validar para que o Cresim não consiga começar a trabalhar com os pontos de energia menores que 4', async () => {
