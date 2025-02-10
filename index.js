@@ -1,8 +1,13 @@
 import { useQuestion } from './src/services/question/use-question.js';
 import { exibeMenuInicial, exibirEmpregos, exibirPersonagens, exibirInteracoes } from './src/services/mensagens/menus.js'
 import { menuCriarPersoangem } from './src/services/menus/menu-inicial.js'
+
 import { dormir, trabalhar } from './src/interacoes.js';
 import { getDados } from './src/services/requisicoes/requisicoes.js';
+
+import { buscarItens, comprarItem, listarItens } from './src/itens.js';
+import { evoluirHabilidade } from './src/aspiracoes.js';
+
 
 const main = async () => {
   let opcao = 0;
@@ -51,7 +56,37 @@ const main = async () => {
             
             console.log(`\n${personagemSelecionado.nome} esta trabalhando...`)
             await new Promise(resolve => setTimeout(resolve, TEMPO_TRABALHO));
-            console.log(`\n${personagemSelecionado.nome} terminou sua jornada de trabalho!`)            
+            console.log(`\n${personagemSelecionado.nome} terminou sua jornada de trabalho!`) 
+            break;      
+
+          case 3:
+            const itens = await buscarItens()
+            let itemSelecionado = null
+
+            do {
+              await listarItens(itens)
+              itemSelecionado = parseInt(await useQuestion("Digite o número do item que deseja comprar: "))
+
+              if (itemSelecionado < 1 || itemSelecionado > itens.length) {
+                console.log("Item inválido.")
+              }
+            } while (!itemSelecionado || itemSelecionado < 0 || itemSelecionado > itens.length)
+
+            comprarItem(personagemSelecionado, itens[itemSelecionado - 1])
+            console.log("Item comprado com sucesso!")
+
+            console.clear()
+            console.log(`${personagemSelecionado.nome} está treinando a habilidade ${itens[itemSelecionado].categoria}...`)
+            const habilidadeEvoluida = await evoluirHabilidade(personagemSelecionado, itens[itemSelecionado].categoria, itens[itemSelecionado])
+
+            await new Promise(resolve => setTimeout(resolve, 8000))
+            console.log(`${personagemSelecionado.nome} treinou ${itens[itemSelecionado].categoria} por 8 segundos`)
+            console.log(`\n====== ${itens[itemSelecionado].categoria} ATUALIZADA ======`)
+            console.log(`Nivel: ${habilidadeEvoluida.habilidades[itens[itemSelecionado].categoria].nivel}`)
+            console.log(`Pontos: ${habilidadeEvoluida.habilidades[itens[itemSelecionado].categoria].pontos}\n\n`)
+            
+            await useQuestion("Pressione ENTER para continuar...")
+            console.clear()
             break;
         
           default:
@@ -72,5 +107,7 @@ const main = async () => {
   }
   console.log("\nFIM DE JOGO"); 
 }
+
+
 
 main()

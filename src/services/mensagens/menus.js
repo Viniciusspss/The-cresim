@@ -77,6 +77,7 @@ export async function exibirInteracoes(personagemSelecionado){
   console.log("\n============== ATIVIDADES ==============")
   console.log("1. Dormir")
   console.log("2. Trabalhar")
+  console.log("3. Comprar item")
   console.log("==========================================")
 
   return parseInt(await useQuestion("\nSelecione a opção: "));
@@ -93,5 +94,4 @@ export async function exibirEmpregos(personagemSelecionado, empregos) {
   console.log("==========================================")
 
   return parseInt(await useQuestion("\nSelecione a opção: "));
-
 }
