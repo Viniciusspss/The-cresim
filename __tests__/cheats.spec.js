@@ -1,4 +1,4 @@
-import { criarPersonagem } from "../src/personagem"
+import { atualizaPersonagem, criarPersonagem } from "../src/personagem"
 import { defineAspiracao } from '../src/aspiracoes'
 import { aplicaCheat } from "../src/cheats"
 
@@ -16,9 +16,11 @@ describe('cheats', () => {
   it('Deve conseguir aplicar o cheat DEITADONAREDE e receber as recompensas', async () => {
     let personagem = criarPersonagem('Cleitin')
     personagem = defineAspiracao(personagem, 'JOGOS')
-    
-    const personagemAtualizado = await aplicaCheat(personagem.id, 'DEITADONAREDE')
+    personagem.energia = 10
+    atualizaPersonagem(personagem)
+
     const valorEsperado = personagem.energia + 5
+    const personagemAtualizado = await aplicaCheat(personagem.id, 'DEITADONAREDE')
 
     expect(personagemAtualizado.energia).toBe(valorEsperado)
   })
