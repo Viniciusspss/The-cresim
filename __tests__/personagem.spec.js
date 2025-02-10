@@ -91,8 +91,7 @@ describe('Personagem', () => {
     const personagem = criarPersonagem("Cresinho")
     personagem.energia = 3
     const personagemAtualizado = defineAspiracao(personagem, "JOGOS")
-
-    const resultado = trabalhar(personagemAtualizado,trabalhos, 1)
-    expect(resultado).toBeNull()
+    
+    expect(() => trabalhar(personagemAtualizado,trabalhos, 1)).toThrow("Seu personagem está muito cansado e não pode trabalhar!")
   })
 })

@@ -2,7 +2,7 @@ import { useQuestion } from './src/services/question/use-question.js';
 import { exibeMenuInicial, exibirEmpregos, exibirPersonagens, exibirInteracoes } from './src/services/mensagens/menus.js'
 import { menuCriarPersoangem } from './src/services/menus/menu-inicial.js'
 
-import { dormir, trabalhar } from './src/interacoes.js';
+import { dormir, tomarBanho, trabalhar } from './src/interacoes.js';
 import { getDados } from './src/services/requisicoes/requisicoes.js';
 
 import { buscarItens, comprarItem, listarItens } from './src/itens.js';
@@ -88,6 +88,14 @@ const main = async () => {
             
             await useQuestion("Pressione ENTER para continuar...")
             console.clear()
+            break;
+          
+          case 4:
+            tomarBanho(personagemSelecionado.id)
+            console.log(`${personagemSelecionado.nome} está tomando banho...`)
+            await new Promise(resolve => setTimeout(resolve, 3000))
+            console.log(`${personagemSelecionado.nome} terminou seu banho!`)
+
             break;
         
           default:

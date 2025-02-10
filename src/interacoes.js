@@ -1,4 +1,4 @@
-import { atualizaPersonagem } from "./personagem.js"
+import { atualizaPersonagem, buscaPersonagem } from "./personagem.js"
 
 export function dormir (personagem, tempo){
     const personagemAtualizado = personagem
@@ -29,16 +29,27 @@ export function trabalhar (personagem, empregos, idEmprego){
     const emprego = empregos.find(emp => emp.id === idEmprego)
 
     const nivelHabilidade = personagem.habilidades[emprego.categoria].nivel.toUpperCase()
-    const salarioDiario = emprego.salario.find(s => s.nivel === nivelHabilidade).valor
+    let salarioDiario = emprego.salario.find(s => s.nivel === nivelHabilidade).valor
     const personagemAtualizado = personagem
 
     if(personagemAtualizado.energia <= 4){
-        console.log("Seu personagem está muito cansado e não pode trabalhar!")
-        return null
+        throw new Error("Seu personagem está muito cansado e não pode trabalhar!")
     }
 
+    if(personagemAtualizado.higiene < 4){
+        throw new Error("Seu personagem precisa tomar banho para trabalhar");
+    }
+
+    
+    const HIGIENE_GASTA = 4
     const ENERGIA_GASTA = 10
     const TEMPO_TRABALHO = 20000
+    const DESCONTO_SALARIO_HIGIENE = 0.90
+    
+    if(personagemAtualizado.higiene - HIGIENE_GASTA < 4){
+        salarioDiario = salarioDiario * DESCONTO_SALARIO_HIGIENE
+    }
+
 
     //CÁLCULO SALÁRIO COM AJUSTES
     const ENERGIA_ATUAL = personagemAtualizado.energia
@@ -62,11 +73,17 @@ export function trabalhar (personagem, empregos, idEmprego){
     const salarioTotal = RECALCULO_SALARIO_CRESCIM_CANSADO + SALARIO_CRESCIM_DESCANSADO
     //FIM CÁLCULO SALÁRIO
 
+    //CÁLCULO DE GASTO DE HIGIENE POR ENERGIA
+    const HIGIENE_GASTA_POR_ENERGIA = HIGIENE_GASTA/ENERGIA_GASTA
+    //
+
     if (personagemAtualizado.energia <= 10) {
+        const higieneGasta = HIGIENE_GASTA_POR_ENERGIA * ENERGIA_PARA_GASTAR
 
         personagemAtualizado.cresceleons += salarioTotal
         personagemAtualizado.energia -= ENERGIA_PARA_GASTAR
         personagemAtualizado.vida -= TEMPO_PARA_TRABALHAR
+        personagemAtualizado.higiene -= higieneGasta
 
         atualizaPersonagem(personagemAtualizado)
         return personagemAtualizado
@@ -74,11 +91,14 @@ export function trabalhar (personagem, empregos, idEmprego){
 
     if (personagemAtualizado.energia == 11) {
         const ENERGIA_PARA_TRABALHAR = 9
+        const higieneGasta = HIGIENE_GASTA_POR_ENERGIA * ENERGIA_PARA_TRABALHAR
+
         const TEMPO_PARA_TRABALHAR_COM_ENERGIA_ONZE = ENERGIA_PARA_TRABALHAR * TEMPO_TRABALHO_POR_ENERGIA
         const salarioAReceber = CRESCELEON_PARA_CADA_PONTO_ENERGIA * ENERGIA_PARA_TRABALHAR
         personagemAtualizado.energia = 2
         personagemAtualizado.cresceleons += salarioAReceber
         personagemAtualizado.vida -= TEMPO_PARA_TRABALHAR_COM_ENERGIA_ONZE
+        personagemAtualizado.higiene -= higieneGasta
 
         atualizaPersonagem(personagemAtualizado)
         return personagemAtualizado
@@ -87,6 +107,16 @@ export function trabalhar (personagem, empregos, idEmprego){
     personagemAtualizado.energia -= ENERGIA_GASTA
     personagemAtualizado.vida -= TEMPO_TRABALHO
     personagemAtualizado.cresceleons += salarioDiario
+    personagemAtualizado.higiene -= HIGIENE_GASTA
+
+    atualizaPersonagem(personagemAtualizado)
+    return personagemAtualizado
+}
+
+export function tomarBanho(idPersonagem){
+    const personagemAtualizado = buscaPersonagem(idPersonagem)
+    personagemAtualizado.cresceleons -= 10
+    personagemAtualizado.higiene = 28
 
     atualizaPersonagem(personagemAtualizado)
     return personagemAtualizado
