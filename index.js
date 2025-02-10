@@ -1,5 +1,5 @@
 import { useQuestion } from './src/services/question/use-question.js';
-import { exibeMenuInicial, exibirEmpregos, exibirPersonagens, exibirInteracoes } from './src/services/mensagens/menus.js'
+import { exibeMenuInicial, exibirEmpregos, exibirPersonagens, exibirInteracoes, exibirOpcoesDeRelacionamento, exibirMenuDeRelacionamento } from './src/services/mensagens/menus.js'
 import { menuCriarPersoangem } from './src/services/menus/menu-inicial.js'
 
 import { dormir, trabalhar } from './src/interacoes.js';
@@ -30,7 +30,7 @@ const main = async () => {
           break; 
         }
 
-        console.clear()
+        console.clear()        
 
         const interacaoSelecionada = await exibirInteracoes(personagemSelecionado)
 
@@ -87,6 +87,15 @@ const main = async () => {
             
             await useQuestion("Pressione ENTER para continuar...")
             console.clear()
+            break;
+
+          case 4:
+            console.clear() 
+            const personagemEscolhido = await exibirOpcoesDeRelacionamento(personagemSelecionado)
+            console.clear()                     
+
+            const opcao = await exibirMenuDeRelacionamento(personagemSelecionado, personagemEscolhido)
+            await useQuestion("Pressione ENTER para continuar...")
             break;
         
           default:

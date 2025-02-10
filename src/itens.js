@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { atualizaPersonagem } from './personagem'
+import { atualizaPersonagem } from './personagem.js'
 
 export async function buscarItens() {
   const { data } = await axios.get('https://emilyspecht.github.io/the-cresim/itens-habilidades.json')

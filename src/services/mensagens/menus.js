@@ -44,7 +44,7 @@ export async function exibeMenuAspiracoes() {
 }
 
 export async function exibirPersonagens(){
-  const personagens = buscaPersonagens()
+  const personagens = buscaPersonagens()  
 
   if (personagens.length > 0) {
     console.log("\n============== PERSONAGENS ==============")
@@ -78,6 +78,7 @@ export async function exibirInteracoes(personagemSelecionado){
   console.log("1. Dormir")
   console.log("2. Trabalhar")
   console.log("3. Comprar item")
+  console.log("4. Relacionamento")
   console.log("==========================================")
 
   return parseInt(await useQuestion("\nSelecione a opção: "));
@@ -94,4 +95,85 @@ export async function exibirEmpregos(personagemSelecionado, empregos) {
   console.log("==========================================")
 
   return parseInt(await useQuestion("\nSelecione a opção: "));
+}
+
+export async function exibirOpcoesDeRelacionamento(personagemSelecionado) {
+  const personagens = buscaPersonagens()
+  let contador = 1;  
+  let personagensDisponiveis = []
+
+  if (personagens.length > 0) {
+    console.log("\n============== PERSONAGENS DISPONÍVEIS ==============")
+    personagens.forEach((personagem) => {
+      if (personagem.nome !== personagemSelecionado.nome) {
+        console.log(`${contador}. ${personagem.nome}`)
+        personagensDisponiveis.push(personagem) 
+        contador++
+      }
+    });
+    console.log("=========================================================")
+  }
+  else {
+    console.log("Não há personagens para se relacionar.") 
+    return null   
+  }
+
+  try {
+    const opcao = parseInt(await useQuestion("\nSelecione um personagem para se relacionar: "));
+
+    if (isNaN(opcao) || opcao < 1 || opcao >= contador) {
+      console.log("\nEsse personagem não existe")
+      return null
+    }
+
+    return personagensDisponiveis[opcao - 1]
+  } 
+  catch (error) {
+    console.log("\nErro ao selecionar o personagem.")
+    return null
+  }  
+}
+
+export async function exibirMenuDeRelacionamento(personagemSelecionado, personagemRelacao) {
+  const pontosRelacionamento = personagemSelecionado.relacionamentos[personagemRelacao.nome];
+  let relacionamentoDescricao = `Relacionamento com ${personagemRelacao.nome}: `;  
+
+  let opcoes = [];
+
+  if (pontosRelacionamento < 0) {
+    relacionamentoDescricao += "INIMIZADE\n";
+    opcoes.unshift("INIMIZADE");
+  } 
+  else {
+    opcoes.push("NEUTRO");
+    relacionamentoDescricao += "NEUTRO\n";
+    
+    if (pontosRelacionamento >= 11 && pontosRelacionamento <= 25) {
+      relacionamentoDescricao += "AMIZADE\n";
+      opcoes.push("AMIZADE");
+    } 
+    else if (pontosRelacionamento > 25) {
+      relacionamentoDescricao += "AMOR\n";
+      opcoes.push("AMIZADE");
+      opcoes.push("AMOR");
+    }
+  }
+
+  console.log(relacionamentoDescricao);
+  console.log("========== AÇÕES DE RELACIONAMENTO ==========");
+  
+  opcoes.forEach((opcao, index) => {
+    console.log(`${index + 1}. ${opcao}`);
+  });
+  
+  console.log("=============================================\n");
+
+  const op = parseInt(await useQuestion("\nSelecione a opção: "));
+  
+  if (isNaN(op) || op < 1 || op > opcoes.length) {
+    console.log("\nOpção inválida!\n");
+    return null;
+  }
+  
+  return opcoes[op - 1];
 }

@@ -10,9 +10,26 @@ export function criarPersonagem(nome) {
     energia: 32,
     higiene: 28,
     cresceleons: 1500,
-  }
+    relacionamentos: {}
+  }   
 
   const personagens = localStore.getObject('personagens') ?? []
+
+  personagem.relacionamentos = personagens.reduce((acc, p) => {
+    if (p.nome && p.nome !== nome) { 
+      acc[p.nome] = 0;
+    }
+    return acc;
+  }, {});
+  
+  personagens.forEach((p) => {
+    if (p.nome !== nome) {      
+      p.relacionamentos[nome] = 0;
+    }
+  });
+
+  console.log(personagem)
+
   localStore.setObject('personagens', [...personagens, personagem])
 
   return personagem
