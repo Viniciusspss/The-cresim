@@ -8,7 +8,7 @@ export async function aplicaCheat(personagemId, codigo) {
 
   const cheat = cheats.find(cheat => cheat.codigo === codigo)
   
-  if (!cheat) return personagem
+  if (!cheat) return null
 
   if(cheat.codigo === 'SORTENAVIDA') {
     personagem.cresceleons += personagem.cresceleons * (cheat.valor / 100)
@@ -31,6 +31,6 @@ export async function aplicaCheat(personagemId, codigo) {
     personagem.vida = cheat.valor
   }
 
-  atualizaPersonagem(personagemId, personagem)
+  atualizaPersonagem(personagem)
   return personagem
 }
