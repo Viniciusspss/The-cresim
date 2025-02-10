@@ -10,6 +10,7 @@ export function criarPersonagem(nome) {
     energia: 32,
     higiene: 28,
     cresceleons: 1500,
+    cheats: [],
   }
 
   const personagens = localStore.getObject('personagens') ?? []

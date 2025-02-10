@@ -1,4 +1,4 @@
-import { useQuestion } from '../question/use-question.js'
+import { question } from '../../question'
 import { buscaPersonagens } from '../../personagem.js'
 
 export async function exibeMenuInicial() {
@@ -8,7 +8,7 @@ export async function exibeMenuInicial() {
   console.log("0. Sair do jogo")
   console.log("==================================")
 
-  return parseInt(await useQuestion("\nSelecione a opção:"));
+  return parseInt(await question("\nSelecione a opção:"));
 }
 
 export async function exibeMenuAspiracoes() {
@@ -19,7 +19,7 @@ export async function exibeMenuAspiracoes() {
   console.log("4. JARDINAGEM");
   console.log("5. MÚSICA");
 
-  const aspiracaoSelecionada = parseInt(await useQuestion("\nSelecione a opção: "));
+  const aspiracaoSelecionada = parseInt(await question("\nSelecione a opção: "));
 
   switch (aspiracaoSelecionada) {
     case 1:
@@ -59,7 +59,7 @@ export async function exibirPersonagens(){
 
 
   try {
-    const personagemSelecionado = parseInt(await useQuestion("\nSelecione a opção: "));
+    const personagemSelecionado = parseInt(await question("\nSelecione a opção: "));
     return personagens[personagemSelecionado - 1]
   } catch (error) {
     console.log("\nEsse personagem não existe")
@@ -80,7 +80,7 @@ export async function exibirInteracoes(personagemSelecionado){
   console.log("3. Comprar item")
   console.log("==========================================")
 
-  return parseInt(await useQuestion("\nSelecione a opção: "));
+  return parseInt(await question("\nSelecione a opção: ", personagemSelecionado.id));
 
 }
 
@@ -93,5 +93,5 @@ export async function exibirEmpregos(personagemSelecionado, empregos) {
   })
   console.log("==========================================")
 
-  return parseInt(await useQuestion("\nSelecione a opção: "));
+  return parseInt(await question("\nSelecione a opção: ", personagemSelecionado.id));
 }

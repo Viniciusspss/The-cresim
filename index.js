@@ -7,6 +7,7 @@ import { getDados } from './src/services/requisicoes/requisicoes.js';
 
 import { buscarItens, comprarItem, listarItens } from './src/itens.js';
 import { evoluirHabilidade } from './src/aspiracoes.js';
+import { question } from './src/question'
 
 
 const main = async () => {
@@ -36,7 +37,7 @@ const main = async () => {
 
         switch (interacaoSelecionada) {
           case 1:
-            const tempo = parseInt(await useQuestion("\nDigite o tempo que deseja dormir (em segundos): "));
+            const tempo = parseInt(await question("\nDigite o tempo que deseja dormir (em segundos): ", personagemSelecionado.id));
             dormir(personagemSelecionado,tempo)
             console.log(`${personagemSelecionado.nome} esta dormindo...`)
 
@@ -65,7 +66,7 @@ const main = async () => {
 
             do {
               await listarItens(itens)
-              itemSelecionado = parseInt(await useQuestion("Digite o número do item que deseja comprar: "))
+              itemSelecionado = parseInt(await question("Digite o número do item que deseja comprar: ", personagemSelecionado.id))
 
               if (itemSelecionado < 1 || itemSelecionado > itens.length) {
                 console.log("Item inválido.")
@@ -73,9 +74,9 @@ const main = async () => {
             } while (!itemSelecionado || itemSelecionado < 0 || itemSelecionado > itens.length)
 
             comprarItem(personagemSelecionado, itens[itemSelecionado - 1])
-            console.log("Item comprado com sucesso!")
+            // console.log("Item comprado com sucesso!")
 
-            console.clear()
+            // console.clear()
             console.log(`${personagemSelecionado.nome} está treinando a habilidade ${itens[itemSelecionado].categoria}...`)
             const habilidadeEvoluida = await evoluirHabilidade(personagemSelecionado, itens[itemSelecionado].categoria, itens[itemSelecionado])
 
