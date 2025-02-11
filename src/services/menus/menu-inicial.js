@@ -11,7 +11,7 @@ export async function menuCriarPersoangem() {
 
   do {
     aspiracao = await exibeMenuAspiracoes()
-    defineAspiracao(personagem, aspiracao)
+    defineAspiracao(personagem.id, aspiracao)
   } while (aspiracao === null)
 
   console.clear();
