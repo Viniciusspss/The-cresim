@@ -17,7 +17,6 @@ export async function buscarItens() {
 }
 
 export async function comprarItem(personagemId, item) {
-  console.log(personagemId)
   const personagem = buscaPersonagem(personagemId)
 
   if (personagem.cresceleons < item.preco) {
@@ -35,30 +34,3 @@ export async function comprarItem(personagemId, item) {
   atualizaPersonagem(personagemAtualizado)
   return personagemAtualizado
 }
-
-// export async function listarItens() {
-//   const items = await buscarItens()
-
-//   const grouped = items.reduce((acc, item) => {
-//     if (!acc[item.categoria]) {
-//       acc[item.categoria] = []
-//     }
-
-//     acc[item.categoria].push(item)
-
-//     return acc
-//   }, {})
-
-//   console.clear()
-//   console.log("\n========== ITENS DINSPONÍVEIS ==========")
-//   console.log('\nOpção | Nome do item (Pontos) | Preço')
-//   console.log("\n============== ATIVIDADES ==============")
-//   for (const key in grouped) {
-//     console.log(`\n${key.toUpperCase()}`)
-//     for (const item of grouped[key]) {
-//       console.log(`\n${item.id}. ${item.nome} (${item.pontos}) - R$ ${item.preco}`)
-//     }
-//   }
-
-//   return items
-// }
