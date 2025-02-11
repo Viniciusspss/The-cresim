@@ -135,7 +135,7 @@ export async function exibirOpcoesDeRelacionamento(personagemSelecionado) {
 }
 
 export async function exibirMenuDeRelacionamento(personagemSelecionado, personagemRelacao) {
-  const pontosRelacionamento = personagemSelecionado.relacionamentos[personagemRelacao.nome];
+  const pontosRelacionamento = personagemSelecionado.relacionamentos[personagemRelacao.nome].pontos;
   let relacionamentoDescricao = `Relacionamento com ${personagemRelacao.nome}: `;  
 
   let opcoes = [];

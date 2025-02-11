@@ -101,12 +101,30 @@ export function relacionarPersonagens(personagemPrincipal, personagemInteracao, 
     const p2 = {...personagemInteracao}         
 
     p1.energia -= interacao.energia  
-    p1.relacionamentos[personagemInteracao.nome] += interacao.pontos  
+    p1.relacionamentos[p2.nome].pontos += interacao.pontos  
     p1.vida -= interacao.energia * 2000;
-    
+
     p2.energia -= Math.ceil(interacao.energia / 2)
-    p2.relacionamentos[p1.nome] += interacao.pontos  
-    p2.vida -= interacao.energia * 2000;          
+    p2.relacionamentos[p1.nome].pontos += interacao.pontos  
+    p2.vida -= interacao.energia * 2000; 
+
+    if(p1.relacionamentos[p2.nome].pontos < 0 && p2.relacionamentos[p1.nome].pontos < 0) {
+        p1.relacionamentos[p2.nome].tipo = 'INIMIZADE'
+        p2.relacionamentos[p1.nome].tipo = 'INIMIZADE'
+    }
+    else if(p1.relacionamentos[p2.nome].pontos <= 10 && p2.relacionamentos[p1.nome].pontos <= 10) {
+        p1.relacionamentos[p2.nome].tipo = 'NEUTRO'
+        p2.relacionamentos[p1.nome].tipo = 'NEUTRO'
+    }
+    else if(p1.relacionamentos[p2.nome].pontos <= 25 && p2.relacionamentos[p1.nome].pontos <= 25) {
+        p1.relacionamentos[p2.nome].tipo = 'AMIZADE'
+        p2.relacionamentos[p1.nome].tipo = 'AMIZADE'
+    }
+    else {
+        p1.relacionamentos[p2.nome].tipo = 'AMOR'
+        p2.relacionamentos[p1.nome].tipo = 'AMOR'
+    }   
+         
 
     atualizaPersonagem(p1)
     atualizaPersonagem(p2)

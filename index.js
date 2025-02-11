@@ -5,7 +5,6 @@ import { dormir, relacionarPersonagens, trabalhar } from './src/interacoes.js';
 import { getDados } from './src/services/requisicoes/requisicoes.js';
 import { buscarItens, comprarItem, listarItens } from './src/itens.js';
 import { evoluirHabilidade } from './src/aspiracoes.js';
-import { atualizaPersonagem } from './src/personagem.js';
 
 
 const main = async () => {

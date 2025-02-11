@@ -17,18 +17,24 @@ export function criarPersonagem(nome) {
 
   personagem.relacionamentos = personagens.reduce((acc, p) => {
     if (p.nome && p.nome !== nome) { 
-      acc[p.nome] = 0;
+      acc[p.nome] = {};
+      acc[p.nome].pontos = 0;
+      acc[p.nome].tipo = "NEUTRO";
     }
     return acc;
   }, {});
   
   personagens.forEach((p) => {
-    if (p.nome !== nome) {      
-      p.relacionamentos[nome] = 0;
+    if (p.nome !== nome) {  
+      if (!p.relacionamentos[nome]) {
+        p.relacionamentos[nome] = {}; 
+      }
+
+      p.relacionamentos[nome].pontos = 0;
+      p.relacionamentos[nome].tipo = 'NEUTRO';    
     }
   });
-
-  console.log(personagem)
+  
 
   localStore.setObject('personagens', [...personagens, personagem])
 
