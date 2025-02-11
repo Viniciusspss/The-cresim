@@ -183,76 +183,17 @@ export async function exibirMenuDeRelacionamento(personagemSelecionado, personag
   return opcoes[opcao - 1];
 }
 
-export async function exibirMenuInimizade(listaInteracoes) {
-  const menu = listaInteracoes.INIMIZADE
+export async function exibirMenuPorNivel(nivelMenu, nomeNivel) {
+  const menu = nivelMenu  
   let opcao = 0
   
   console.clear()
 
   do {    
-    console.log("\n========== AÇÕES RELACIONAMENTO INIMIZADE ==========");
-    menu.forEach((opcao) => {
-      console.log(`${opcao.id}. ${opcao.interacao}`)
-    })
-    console.log("====================================================\n");
-    opcao = parseInt(await useQuestion("\nSelecione a opção: "));
-
-    if(opcao < 1 || opcao > menu.length) {
-      console.log("\nOpção inválida.")
-    }
-  } while (opcao < 1 || opcao > menu.length)
-}
-
-export async function exibirMenuNeutro(listaInteracoes) {
-  const menu = listaInteracoes.NEUTRO
-  let opcao = 0
-  
-  console.clear()
-
-  do {    
-    console.log("\n========== AÇÕES RELACIONAMENTO NEUTRO ==========");
-    menu.forEach((opcao) => {
-      console.log(`${opcao.id}. ${opcao.interacao}`)
-    })
-    console.log("=================================================\n");
-    opcao = parseInt(await useQuestion("\nSelecione a opção: "));
-
-    if(opcao < 1 || opcao > menu.length) {
-      console.log("\nOpção inválida.")
-    }
-  } while (opcao < 1 || opcao > menu.length)
-}
-
-export async function exibirMenuAmizade(listaInteracoes) {
-  const menu = listaInteracoes.AMIZADE
-  let opcao = 0
-  
-  console.clear()
-
-  do {    
-    console.log("\n========== AÇÕES RELACIONAMENTO AMIZADE ==========");
-    menu.forEach((opcao) => {
-      console.log(`${opcao.id}. ${opcao.interacao}`)
-    })
-    console.log("===================================================\n");
-    opcao = parseInt(await useQuestion("\nSelecione a opção: "));
-
-    if(opcao < 1 || opcao > menu.length) {
-      console.log("\nOpção inválida.")
-    }
-  } while (opcao < 1 || opcao > menu.length)
-}
-
-export async function exibirMenuAmor(listaInteracoes) {
-  const menu = listaInteracoes.AMOR
-  let opcao = 0
-  
-  console.clear()
-
-  do {    
-    console.log("\n========== AÇÕES RELACIONAMENTO AMOR ==========");
-    menu.forEach((opcao) => {
-      console.log(`${opcao.id}. ${opcao.interacao}`)
+    console.log(`Menu de relacionamento ${nomeNivel}\n`)
+    console.log("========== AÇÕES RELACIONAMENTO ==========");
+    menu.forEach((itemMenu) => {
+      console.log(`${itemMenu.id}. ${itemMenu.interacao}`)
     })
     console.log("===============================================\n");
     opcao = parseInt(await useQuestion("\nSelecione a opção: "));
@@ -261,4 +202,6 @@ export async function exibirMenuAmor(listaInteracoes) {
       console.log("\nOpção inválida.")
     }
   } while (opcao < 1 || opcao > menu.length)
+
+    return nivelMenu[opcao - 1]
 }

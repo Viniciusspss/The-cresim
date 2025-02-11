@@ -1,10 +1,8 @@
 import { useQuestion } from './src/services/question/use-question.js';
-import { exibeMenuInicial, exibirEmpregos, exibirPersonagens, exibirInteracoes, exibirOpcoesDeRelacionamento, exibirMenuDeRelacionamento, exibirMenuNeutro, exibirMenuAmizade, exibirMenuAmor, exibirMenuInimizade } from './src/services/mensagens/menus.js'
+import { exibeMenuInicial, exibirEmpregos, exibirPersonagens, exibirInteracoes, exibirOpcoesDeRelacionamento, exibirMenuDeRelacionamento, exibirMenuPorNivel } from './src/services/mensagens/menus.js'
 import { menuCriarPersoangem } from './src/services/menus/menu-inicial.js'
-
 import { dormir, trabalhar } from './src/interacoes.js';
 import { getDados } from './src/services/requisicoes/requisicoes.js';
-
 import { buscarItens, comprarItem, listarItens } from './src/itens.js';
 import { evoluirHabilidade } from './src/aspiracoes.js';
 
@@ -97,21 +95,24 @@ const main = async () => {
             const opcao = await exibirMenuDeRelacionamento(personagemSelecionado, personagemEscolhido)
             const urlInteracoes = "https://emilyspecht.github.io/the-cresim/interacoes.json"
             const listaInteracoes = await getDados(urlInteracoes)
+            let interacao = 0
 
             if(opcao === "INIMIZADE") {
-              const interacao = await exibirMenuInimizade(listaInteracoes)
+              interacao = await exibirMenuPorNivel(listaInteracoes.INIMIZADE, "INIMIZADE")
             }
             else if(opcao === "NEUTRO") {
-              const interacao = await exibirMenuNeutro(listaInteracoes)
+              interacao = await exibirMenuPorNivel(listaInteracoes.NEUTRO, "NEUTRO")
             }
             else if(opcao === "AMIZADE") {
-              const interacao = await exibirMenuAmizade(listaInteracoes)
+              interacao = await exibirMenuPorNivel(listaInteracoes.AMIZADE, "AMIZADE")
             }
             else {
-              const interacao = await exibirMenuAmor(listaInteracoes)
+              interacao = await exibirMenuPorNivel(listaInteracoes.AMOR, "AMOR")
             }
 
-            await useQuestion("Pressione ENTER para continuar...")
+            console.log(interacao)
+
+            await useQuestion("\n\n\nPressione ENTER para continuar...")
             break;
         
           default:
