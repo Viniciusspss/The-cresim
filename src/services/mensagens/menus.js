@@ -141,21 +141,21 @@ export async function exibirMenuDeRelacionamento(personagemSelecionado, personag
   let opcoes = [];
 
   if (pontosRelacionamento < 0) {
-    relacionamentoDescricao += "INIMIZADE\n";    
+    relacionamentoDescricao += "INIMIZADE 💔\n";    
     opcoes.push("INIMIZADE")
     opcoes.push("NEUTRO");
   } 
   else if(pontosRelacionamento <= 10) {
-    relacionamentoDescricao += "NEUTRO\n";    
+    relacionamentoDescricao += "NEUTRO 🌱\n";    
     opcoes.push("NEUTRO");
   }
   else if(pontosRelacionamento <= 25) {
-    relacionamentoDescricao += "AMIZADE\n";
+    relacionamentoDescricao += "AMIZADE 🍻\n";
     opcoes.push("NEUTRO");
     opcoes.push("AMIZADE");
   }
   else if(pontosRelacionamento > 25) {
-    relacionamentoDescricao += "AMOR\n";
+    relacionamentoDescricao += "AMOR ❤️‍🔥 \n";
     opcoes.push("NEUTRO");
     opcoes.push("AMIZADE");
     opcoes.push("AMOR");

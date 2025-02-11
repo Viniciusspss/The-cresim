@@ -98,16 +98,16 @@ const main = async () => {
             let interacao = 0
 
             if(opcao === "INIMIZADE") {
-              interacao = await exibirMenuPorNivel(listaInteracoes.INIMIZADE, "INIMIZADE")
+              interacao = await exibirMenuPorNivel(listaInteracoes.INIMIZADE, "INIMIZADE 💔")
             }
             else if(opcao === "NEUTRO") {
-              interacao = await exibirMenuPorNivel(listaInteracoes.NEUTRO, "NEUTRO")
+              interacao = await exibirMenuPorNivel(listaInteracoes.NEUTRO, "NEUTRO 🌱")
             }
             else if(opcao === "AMIZADE") {
-              interacao = await exibirMenuPorNivel(listaInteracoes.AMIZADE, "AMIZADE")
+              interacao = await exibirMenuPorNivel(listaInteracoes.AMIZADE, "AMIZADE 🌱")
             }
             else {
-              interacao = await exibirMenuPorNivel(listaInteracoes.AMOR, "AMOR")
+              interacao = await exibirMenuPorNivel(listaInteracoes.AMOR, "AMOR 🌱")
             }
 
             console.log(interacao)
@@ -115,7 +115,7 @@ const main = async () => {
             await useQuestion("\n\n\nPressione ENTER para continuar...")
             break;
         
-          default:
+          default:            
             break;
         }
         break;
