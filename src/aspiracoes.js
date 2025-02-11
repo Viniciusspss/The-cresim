@@ -39,6 +39,7 @@ export async function evoluirHabilidade(personagemId, item) {
   }
 
   personagem.energia -= 4
+  personagem.higiene -= 2
 
   atualizaPersonagem(personagem)
   return personagem
