@@ -161,7 +161,8 @@ export async function exibirMenuDeRelacionamento(personagemSelecionado, personag
     opcoes.push("AMOR");
   }
 
-
+  console.log(`Personagem: ${personagemSelecionado.nome} | Energia: ${personagemSelecionado.energia} | Vida: ${personagemSelecionado.vida}`)
+  console.log(`Personagem: ${personagemRelacao.nome} | Energia: ${personagemRelacao.energia} | Vida: ${personagemRelacao.vida}\n`)
   console.log(relacionamentoDescricao);
   console.log("========== AÇÕES DE RELACIONAMENTO ==========");
   
@@ -183,11 +184,14 @@ export async function exibirMenuDeRelacionamento(personagemSelecionado, personag
   return opcoes[opcao - 1];
 }
 
-export async function exibirMenuPorNivel(nivelMenu, nomeNivel) {
+export async function exibirMenuPorNivel(nivelMenu, nomeNivel, personagemSelecionado, personagemRelacao) {
   const menu = nivelMenu  
   let opcao = 0
   
   console.clear()
+
+  console.log(`Personagem: ${personagemSelecionado.nome} | Energia: ${personagemSelecionado.energia} | Vida: ${personagemSelecionado.vida}`)
+  console.log(`Personagem: ${personagemRelacao.nome} | Energia: ${personagemRelacao.energia} | Vida: ${personagemRelacao.vida}\n`)
 
   do {    
     console.log(`Menu de relacionamento ${nomeNivel}\n`)

@@ -1,10 +1,11 @@
 import { useQuestion } from './src/services/question/use-question.js';
 import { exibeMenuInicial, exibirEmpregos, exibirPersonagens, exibirInteracoes, exibirOpcoesDeRelacionamento, exibirMenuDeRelacionamento, exibirMenuPorNivel } from './src/services/mensagens/menus.js'
 import { menuCriarPersoangem } from './src/services/menus/menu-inicial.js'
-import { dormir, trabalhar } from './src/interacoes.js';
+import { dormir, relacionarPersonagens, trabalhar } from './src/interacoes.js';
 import { getDados } from './src/services/requisicoes/requisicoes.js';
 import { buscarItens, comprarItem, listarItens } from './src/itens.js';
 import { evoluirHabilidade } from './src/aspiracoes.js';
+import { atualizaPersonagem } from './src/personagem.js';
 
 
 const main = async () => {
@@ -98,21 +99,38 @@ const main = async () => {
             let interacao = 0
 
             if(opcao === "INIMIZADE") {
-              interacao = await exibirMenuPorNivel(listaInteracoes.INIMIZADE, "INIMIZADE 💔")
+              interacao = await exibirMenuPorNivel(listaInteracoes.INIMIZADE, "INIMIZADE 💔", personagemSelecionado, personagemEscolhido)
             }
             else if(opcao === "NEUTRO") {
-              interacao = await exibirMenuPorNivel(listaInteracoes.NEUTRO, "NEUTRO 🌱")
+              interacao = await exibirMenuPorNivel(listaInteracoes.NEUTRO, "NEUTRO 🌱", personagemSelecionado, personagemEscolhido)
             }
             else if(opcao === "AMIZADE") {
-              interacao = await exibirMenuPorNivel(listaInteracoes.AMIZADE, "AMIZADE 🌱")
+              interacao = await exibirMenuPorNivel(listaInteracoes.AMIZADE, "AMIZADE 🌱", personagemSelecionado, personagemEscolhido)
             }
             else {
-              interacao = await exibirMenuPorNivel(listaInteracoes.AMOR, "AMOR 🌱")
+              interacao = await exibirMenuPorNivel(listaInteracoes.AMOR, "AMOR 🌱", personagemSelecionado, personagemEscolhido)
             }
 
-            console.log(interacao)
+            console.clear()
 
-            await useQuestion("\n\n\nPressione ENTER para continuar...")
+            const energiaFabricyo = interacao.energia  
+            const energiaAna = Math.ceil(interacao.energia / 2)
+            const vidaPerdida = interacao.energia * 2000;      
+            const [personagemPrincipal, personagemInteracao] = relacionarPersonagens(personagemSelecionado, personagemEscolhido, interacao)
+
+            console.log(`${personagemPrincipal.nome} fez a ação de '${interacao.interacao}' com ${personagemInteracao.nome}\n`);
+            console.log(`${personagemPrincipal.nome}:`);
+            console.log(`   Energia perdida: ${energiaFabricyo}`);
+            console.log(`   Vida perdida: ${vidaPerdida}`);
+            console.log(`   Pontos acumulados: ${interacao.pontos}\n\n`);
+            
+            console.log(`${personagemInteracao.nome}:`);
+            console.log(`   Energia perdida: ${energiaAna}`);
+            console.log(`   Vida perdida: ${vidaPerdida}`);
+            console.log(`   Pontos acumulados: ${interacao.pontos}\n`);       
+
+            await useQuestion("\nPressione ENTER para continuar...")
+            console.clear()
             break;
         
           default:            

@@ -95,3 +95,21 @@ export function trabalhar (personagem, empregos, idEmprego){
     atualizaPersonagem(personagemAtualizado)
     return personagemAtualizado
 }
+
+export function relacionarPersonagens(personagemPrincipal, personagemInteracao, interacao) {
+    const p1 = {...personagemPrincipal}
+    const p2 = {...personagemInteracao}         
+
+    p1.energia -= interacao.energia  
+    p1.relacionamentos[personagemInteracao.nome] += interacao.pontos  
+    p1.vida -= interacao.energia * 2000;
+    
+    p2.energia -= Math.ceil(interacao.energia / 2)
+    p2.relacionamentos[p1.nome] += interacao.pontos  
+    p2.vida -= interacao.energia * 2000;          
+
+    atualizaPersonagem(p1)
+    atualizaPersonagem(p2)
+
+    return [p1, p2]
+}
