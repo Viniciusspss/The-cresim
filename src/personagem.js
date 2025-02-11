@@ -3,6 +3,11 @@ import { useLocalStorage } from "./services/local-storage/use-local-storage.js"
 const localStore = useLocalStorage()
 
 export function criarPersonagem(nome) {
+  const ATRIBUTOS_INICIAIS_HABILIDADES = {
+    nivel: 'JUNIOR',
+    pontos: 0
+  }
+
   const personagem = {
     id: Date.now(),
     nome,
@@ -10,7 +15,16 @@ export function criarPersonagem(nome) {
     energia: 32,
     higiene: 28,
     cresceleons: 1500,
+    aspiracao: null,
     cheats: [],
+    itens: [],
+    habilidades: {
+      'GASTRONOMIA': ATRIBUTOS_INICIAIS_HABILIDADES,
+      'PINTURA': ATRIBUTOS_INICIAIS_HABILIDADES,
+      'JOGOS': ATRIBUTOS_INICIAIS_HABILIDADES,
+      'JARDINAGEM': ATRIBUTOS_INICIAIS_HABILIDADES,
+      'MUSICA': ATRIBUTOS_INICIAIS_HABILIDADES,
+    },
   }
 
   const personagens = localStore.getObject('personagens') ?? []
@@ -28,7 +42,7 @@ export function buscaPersonagem(personagemId) {
   const personagem = personagens.find(person => person.id === personagemId)
 
   if (!personagem) {
-    console.log("Personagem não encontrado!")
+    throw new Error('Personagem não encontrado')
   }
   
   return personagem

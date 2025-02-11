@@ -3,6 +3,7 @@ import { buscaPersonagem, atualizaPersonagem } from './personagem'
 
 export async function aplicaCheat(personagemId, codigo) {
   const personagem = buscaPersonagem(personagemId)
+
   const URL = 'https://emilyspecht.github.io/the-cresim/cheats.json'
   const cheats = await getDados(URL)
 

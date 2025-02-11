@@ -1,10 +1,11 @@
-import { atualizaPersonagem } from "./personagem.js"
+import { atualizaPersonagem, buscaPersonagem } from "./personagem.js"
 
-export function dormir (personagem, tempo){
-    const personagemAtualizado = personagem
+export function dormir (personagemId, tempo){
+    const personagem = buscaPersonagem(personagemId)
+
     const TEMPO_INVALIDO = 0;
     if(tempo < TEMPO_INVALIDO){
-        console.log("Insira um tempo válido")
+        throw new Error('Insira um tempo válido.')
     }
 
     const INTERVALO_SONO = 5
@@ -16,23 +17,21 @@ export function dormir (personagem, tempo){
         pontosEnergia+=BONUS_ENERGIA
     }
 
-    personagemAtualizado.energia += pontosEnergia
+    personagem.energia += pontosEnergia
 
-    atualizaPersonagem(personagemAtualizado)
-
-    return personagemAtualizado
-
+    atualizaPersonagem(personagem)
+    return personagem
 }
 
 
-export function trabalhar (personagem, empregos, idEmprego){
+export function trabalhar (personagemId, empregos, idEmprego){
+    const personagem = buscaPersonagem(personagemId)
     const emprego = empregos.find(emp => emp.id === idEmprego)
 
-    const nivelHabilidade = personagem.habilidades[emprego.categoria].nivel.toUpperCase()
+    const nivelHabilidade = personagem.habilidades[emprego.categoria].nivel
     const salarioDiario = emprego.salario.find(s => s.nivel === nivelHabilidade).valor
-    const personagemAtualizado = personagem
 
-    if(personagemAtualizado.energia <= 4){
+    if(personagem.energia <= 4){
         console.log("Seu personagem está muito cansado e não pode trabalhar!")
         return null
     }
@@ -41,7 +40,7 @@ export function trabalhar (personagem, empregos, idEmprego){
     const TEMPO_TRABALHO = 20000
 
     //CÁLCULO SALÁRIO COM AJUSTES
-    const ENERGIA_ATUAL = personagemAtualizado.energia
+    const ENERGIA_ATUAL = personagem.energia
     const ENERGIA_MINIMA = 2
     const ENERGIA_PARA_DESCONTO = 5
     const ENERGIA_PARA_RECALCULO = 3
@@ -62,32 +61,32 @@ export function trabalhar (personagem, empregos, idEmprego){
     const salarioTotal = RECALCULO_SALARIO_CRESCIM_CANSADO + SALARIO_CRESCIM_DESCANSADO
     //FIM CÁLCULO SALÁRIO
 
-    if (personagemAtualizado.energia <= 10) {
+    if (personagem.energia <= 10) {
 
-        personagemAtualizado.cresceleons += salarioTotal
-        personagemAtualizado.energia -= ENERGIA_PARA_GASTAR
-        personagemAtualizado.vida -= TEMPO_PARA_TRABALHAR
+        personagem.cresceleons += salarioTotal
+        personagem.energia -= ENERGIA_PARA_GASTAR
+        personagem.vida -= TEMPO_PARA_TRABALHAR
 
-        atualizaPersonagem(personagemAtualizado)
-        return personagemAtualizado
+        atualizaPersonagem(personagem)
+        return personagem
     }
 
-    if (personagemAtualizado.energia == 11) {
+    if (personagem.energia == 11) {
         const ENERGIA_PARA_TRABALHAR = 9
         const TEMPO_PARA_TRABALHAR_COM_ENERGIA_ONZE = ENERGIA_PARA_TRABALHAR * TEMPO_TRABALHO_POR_ENERGIA
         const salarioAReceber = CRESCELEON_PARA_CADA_PONTO_ENERGIA * ENERGIA_PARA_TRABALHAR
-        personagemAtualizado.energia = 2
-        personagemAtualizado.cresceleons += salarioAReceber
-        personagemAtualizado.vida -= TEMPO_PARA_TRABALHAR_COM_ENERGIA_ONZE
+        personagem.energia = 2
+        personagem.cresceleons += salarioAReceber
+        personagem.vida -= TEMPO_PARA_TRABALHAR_COM_ENERGIA_ONZE
 
-        atualizaPersonagem(personagemAtualizado)
-        return personagemAtualizado
+        atualizaPersonagem(personagem)
+        return personagem
     }
 
-    personagemAtualizado.energia -= ENERGIA_GASTA
-    personagemAtualizado.vida -= TEMPO_TRABALHO
-    personagemAtualizado.cresceleons += salarioDiario
+    personagem.energia -= ENERGIA_GASTA
+    personagem.vida -= TEMPO_TRABALHO
+    personagem.cresceleons += salarioDiario
 
-    atualizaPersonagem(personagemAtualizado)
-    return personagemAtualizado
+    atualizaPersonagem(personagem)
+    return personagem
 }

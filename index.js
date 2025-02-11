@@ -1,114 +1,13 @@
-import { useQuestion } from './src/services/question/use-question.js';
-import { exibeMenuInicial, exibirEmpregos, exibirPersonagens, exibirInteracoes } from './src/services/mensagens/menus.js'
-import { menuCriarPersoangem } from './src/services/menus/menu-inicial.js'
-
-import { dormir, trabalhar } from './src/interacoes.js';
-import { getDados } from './src/services/requisicoes/requisicoes.js';
-
-import { buscarItens, comprarItem, listarItens } from './src/itens.js';
-import { evoluirHabilidade } from './src/aspiracoes.js';
-import { question } from './src/question'
-
+import { exibeMenuInicial } from "./src/services/menu"
 
 const main = async () => {
-  let opcao = 0;
   let finalizarJogo = false 
   
   while (!finalizarJogo) {
-    do {
-      opcao = await exibeMenuInicial()
-    } while (opcao < 0 || opcao > 2)
-
-    switch (opcao) {
-      case 1:                
-        await menuCriarPersoangem()
-        break;
-
-      case 2:
-        let personagemSelecionado = await exibirPersonagens()
-
-        if (!personagemSelecionado) {
-          break; 
-        }
-
-        console.clear()
-
-        const interacaoSelecionada = await exibirInteracoes(personagemSelecionado)
-
-        switch (interacaoSelecionada) {
-          case 1:
-            const tempo = parseInt(await question("\nDigite o tempo que deseja dormir (em segundos): ", personagemSelecionado.id));
-            dormir(personagemSelecionado,tempo)
-            console.log(`${personagemSelecionado.nome} esta dormindo...`)
-
-            await new Promise(resolve => setTimeout(resolve, tempo * 1000));
-            console.log(`${personagemSelecionado.nome} acordou!`)
-            
-            break;
-
-          case 2:     
-            const urlEmprego = "https://emilyspecht.github.io/the-cresim/empregos.json"
-            const empregos = await getDados(urlEmprego) 
-            const opcaoTrabalho = await exibirEmpregos(personagemSelecionado, empregos)  
-            const TEMPO_TRABALHO = 20000           
-           
-              
-            trabalhar(personagemSelecionado, empregos, opcaoTrabalho)
-            
-            console.log(`\n${personagemSelecionado.nome} esta trabalhando...`)
-            await new Promise(resolve => setTimeout(resolve, TEMPO_TRABALHO));
-            console.log(`\n${personagemSelecionado.nome} terminou sua jornada de trabalho!`) 
-            break;      
-
-          case 3:
-            const itens = await buscarItens()
-            let itemSelecionado = null
-
-            do {
-              await listarItens(itens)
-              itemSelecionado = parseInt(await question("Digite o número do item que deseja comprar: ", personagemSelecionado.id))
-
-              if (itemSelecionado < 1 || itemSelecionado > itens.length) {
-                console.log("Item inválido.")
-              }
-            } while (!itemSelecionado || itemSelecionado < 0 || itemSelecionado > itens.length)
-
-            comprarItem(personagemSelecionado, itens[itemSelecionado - 1])
-            // console.log("Item comprado com sucesso!")
-
-            // console.clear()
-            console.log(`${personagemSelecionado.nome} está treinando a habilidade ${itens[itemSelecionado].categoria}...`)
-            const habilidadeEvoluida = await evoluirHabilidade(personagemSelecionado, itens[itemSelecionado].categoria, itens[itemSelecionado])
-
-            await new Promise(resolve => setTimeout(resolve, 8000))
-            console.log(`${personagemSelecionado.nome} treinou ${itens[itemSelecionado].categoria} por 8 segundos`)
-            console.log(`\n====== ${itens[itemSelecionado].categoria} ATUALIZADA ======`)
-            console.log(`Nivel: ${habilidadeEvoluida.habilidades[itens[itemSelecionado].categoria].nivel}`)
-            console.log(`Pontos: ${habilidadeEvoluida.habilidades[itens[itemSelecionado].categoria].pontos}\n\n`)
-            
-            await useQuestion("Pressione ENTER para continuar...")
-            console.clear()
-            break;
-        
-          default:
-            break;
-        }
-        break;
-
-      case 0:
-        finalizarJogo = true;              
-        console.clear();              
-        break;
-
-      default:
-        console.log("Opção inválida.");
-        break;
-    }
-           
+    finalizarJogo = await exibeMenuInicial()
   }
-  console.log("\nFIM DE JOGO"); 
+  console.clear()
+  console.log("FIM DE JOGO"); 
 }
-
-
 
 main()
