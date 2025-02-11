@@ -1,64 +1,45 @@
-import { atualizaPersonagem } from './personagem.js'
+import { atualizaPersonagem, buscaPersonagem } from './personagem.js'
 
-export function defineAspiracao(personagem, aspiracao) {
+export function defineAspiracao(personagemId, aspiracao) {
+  const personagem = buscaPersonagem(personagemId)
+
   const personagemAtualizado = {
     ...personagem,
     aspiracao,
-    habilidades: {
-      'GASTRONOMIA': {
-        nivel: 'junior',
-        pontos: 0,
-      },
-      'PINTURA': {
-        nivel: 'junior',
-        pontos: 0,
-      },
-      'JOGOS': {
-        nivel: 'junior',
-        pontos: 0,
-      },
-      'JARDINAGEM': {
-        nivel: 'junior',
-        pontos: 0,
-      },
-      'MUSICA': {
-        nivel: 'junior',
-        pontos: 0,
-      },
-    },
   }
 
   atualizaPersonagem(personagemAtualizado)
-
   return personagemAtualizado
 }
 
-export async function evoluirHabilidade(personagem, habilidade, item) {
+export async function evoluirHabilidade(personagemId, item) {
+  const personagem = buscaPersonagem(personagemId)
+
   if (personagem.energia < 4) {
     throw new Error('Energia insuficiente para treinar')
   }
-  
-  const personagemComHabilidadeEvoluida = personagem
-  personagemComHabilidadeEvoluida.habilidades[habilidade].pontos += item.pontos
 
-  if (habilidade === personagem.aspiracao) {
-    personagemComHabilidadeEvoluida.habilidades[habilidade].pontos += 1
+  const habilidadeKey = item.categoria
+  personagem.habilidades[habilidadeKey].pontos += item.pontos
+
+  if (habilidadeKey === personagem.aspiracao) {
+    personagem.habilidades[habilidadeKey].pontos += 1
   }
 
-  for (const key in personagemComHabilidadeEvoluida.habilidades) {
-    const habilidadeAtual = personagemComHabilidadeEvoluida.habilidades[key]
+  for (const key in personagem.habilidades) {
+    const habilidadeAtual = personagem.habilidades[key]
+
     if (habilidadeAtual.pontos >= 17) {
-      habilidadeAtual.nivel = 'pleno'
+      habilidadeAtual.nivel = 'PLENO'
     }
 
     if (habilidadeAtual.pontos > 26) {
-      habilidadeAtual.nivel = 'senior'
+      habilidadeAtual.nivel = 'SENIOR'
     }
   }
 
-  personagemComHabilidadeEvoluida.energia -= 4
+  personagem.energia -= 4
 
-  atualizaPersonagem(personagemComHabilidadeEvoluida)
-
-  return personagemComHabilidadeEvoluida
+  atualizaPersonagem(personagem)
+  return personagem
 }

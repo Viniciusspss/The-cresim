@@ -38,7 +38,7 @@ const main = async () => {
         switch (interacaoSelecionada) {
           case 1:
             const tempo = parseInt(await question("\nDigite o tempo que deseja dormir (em segundos): ", personagemSelecionado.id));
-            dormir(personagemSelecionado,tempo)
+            dormir(personagemSelecionado.id, tempo)
             console.log(`${personagemSelecionado.nome} esta dormindo...`)
 
             await new Promise(resolve => setTimeout(resolve, tempo * 1000));
@@ -53,7 +53,7 @@ const main = async () => {
             const TEMPO_TRABALHO = 20000           
            
               
-            trabalhar(personagemSelecionado, empregos, opcaoTrabalho)
+            trabalhar(personagemSelecionado.id, empregos, opcaoTrabalho)
             
             console.log(`\n${personagemSelecionado.nome} esta trabalhando...`)
             await new Promise(resolve => setTimeout(resolve, TEMPO_TRABALHO));

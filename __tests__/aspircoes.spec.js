@@ -1,26 +1,26 @@
 import { defineAspiracao, evoluirHabilidade } from "../src/aspiracoes"
-import { criarPersonagem } from "../src/personagem"
+import { atualizaPersonagem, criarPersonagem } from "../src/personagem"
 import { buscarItens } from "../src/itens"
 
 describe('Aspiracoes', () => {
   it('Deve conseguir atribuir uma aspiração ao Cresim', async () =>  {
     const aspiracaoEsperada = 'GASTRONOMIA'
 
-    const personagem = criarPersonagem("Cresinho")
-    const personagemComAspiracao = defineAspiracao(personagem, 'GASTRONOMIA')
+    let personagem = criarPersonagem("Cresinho")
+    personagem = defineAspiracao(personagem.id, 'GASTRONOMIA')
 
-    expect(personagemComAspiracao).toMatchObject({
+    expect(personagem).toMatchObject({
       aspiracao: aspiracaoEsperada
     })
   })
 
   it('Deve conseguir concluir um ciclo de treino com habilidade que não é aspiração e receber os pontos corretamente', async () => {
     let personagem = criarPersonagem("Cresinho")
-    personagem = defineAspiracao(personagem, 'PINTURA')
+    personagem = defineAspiracao(personagem.id, 'PINTURA')
 
     const [item] = await buscarItens()
 
-    const personagemComHabilidadeEvoluida = await evoluirHabilidade(personagem, item.categoria, item)
+    const personagemComHabilidadeEvoluida = await evoluirHabilidade(personagem.id, item)
 
     expect(personagemComHabilidadeEvoluida).toMatchObject({
       habilidades: {
@@ -33,31 +33,31 @@ describe('Aspiracoes', () => {
 
   it('Deve conseguir concluir um ciclo de treino com habilidade que é sua aspiração e receber os pontos corretamente', async() => {
     let personagem = criarPersonagem("Cresinho")
-    personagem = defineAspiracao(personagem, 'GASTRONOMIA')
+    personagem = defineAspiracao(personagem.id, 'GASTRONOMIA')
 
     const [item] = await buscarItens()
-    const personagemComHabilidadeEvoluida = await evoluirHabilidade(personagem, item.categoria, item)
+    const personagemComHabilidadeEvoluida = await evoluirHabilidade(personagem.id, item)
 
     expect(personagemComHabilidadeEvoluida).toMatchObject({
       habilidades: {
         'GASTRONOMIA': {
-          nivel: 'junior',
+          nivel: 'JUNIOR',
           pontos: 4
         },
         'PINTURA': {
-          nivel: 'junior',
+          nivel: 'JUNIOR',
           pontos: 0
         },
         'JOGOS': {
-          nivel: 'junior',
+          nivel: 'JUNIOR',
           pontos: 0
         },
         'JARDINAGEM': {
-          nivel: 'junior',
+          nivel: 'JUNIOR',
           pontos: 0
         },
         'MUSICA': {
-          nivel: 'junior',
+          nivel: 'JUNIOR',
           pontos: 0
         },
       }
@@ -66,10 +66,10 @@ describe('Aspiracoes', () => {
 
   it('Deve perder pontos de energia ao terminar um ciclo de treino', async () => {
     let personagem = criarPersonagem("Cresinho")
-    personagem = defineAspiracao(personagem, 'GASTRONOMIA')
+    personagem = defineAspiracao(personagem.id, 'GASTRONOMIA')
 
     const [item] = await buscarItens()
-    const personagemComHabilidadeEvoluida = await evoluirHabilidade(personagem, item.categoria, item)
+    const personagemComHabilidadeEvoluida = await evoluirHabilidade(personagem.id, item)
 
     expect(personagemComHabilidadeEvoluida).toMatchObject({
       energia: 28
@@ -78,30 +78,34 @@ describe('Aspiracoes', () => {
 
   it('Deve lançar um erro ao tentar treinar sem energia suficiente', async () => {
     let personagem = criarPersonagem("Cresinho")
-    personagem = defineAspiracao(personagem, 'GASTRONOMIA')
+    personagem = defineAspiracao(personagem.id, 'GASTRONOMIA')
 
     const [item] = await buscarItens()
 
-    personagem.energia = 3
+    personagem.energia = 0
     personagem.cresceleons = 20000
 
+    await atualizaPersonagem(personagem)
+
     expect(async () => {
-      await evoluirHabilidade(personagem, item.categoria, item)
+      await evoluirHabilidade(personagem.id, item)
     }).rejects.toThrowError('Energia insuficiente para treinar')
   })
 
   it('Deve avançar o nivel de habilidade quando completar os pontos necessarios', async () => {
     const [item] = await buscarItens()
     let personagem = criarPersonagem("Cresinho")
-    personagem = defineAspiracao(personagem, 'GASTRONOMIA')
-
+    personagem.cresceleons = 20000
     personagem.habilidades['GASTRONOMIA'].pontos = 16
 
-    const personagemComNivelHabilidadeEvoluido = await evoluirHabilidade(personagem, item.categoria, item)
+    await atualizaPersonagem(personagem)
+
+    personagem = defineAspiracao(personagem.id, 'GASTRONOMIA')
+    const personagemComNivelHabilidadeEvoluido = await evoluirHabilidade(personagem.id, item)
     
     expect(personagemComNivelHabilidadeEvoluido.habilidades).toMatchObject({
       'GASTRONOMIA': {
-        nivel: 'pleno',
+        nivel: 'PLENO',
         pontos: 20,
       }
     })
