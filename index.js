@@ -1,5 +1,5 @@
 import { useQuestion } from './src/services/question/use-question.js';
-import { exibeMenuInicial, exibirEmpregos, exibirPersonagens, exibirInteracoes, exibirOpcoesDeRelacionamento, exibirMenuDeRelacionamento } from './src/services/mensagens/menus.js'
+import { exibeMenuInicial, exibirEmpregos, exibirPersonagens, exibirInteracoes, exibirOpcoesDeRelacionamento, exibirMenuDeRelacionamento, exibirMenuNeutro, exibirMenuAmizade, exibirMenuAmor, exibirMenuInimizade } from './src/services/mensagens/menus.js'
 import { menuCriarPersoangem } from './src/services/menus/menu-inicial.js'
 
 import { dormir, trabalhar } from './src/interacoes.js';
@@ -95,6 +95,22 @@ const main = async () => {
             console.clear()                     
 
             const opcao = await exibirMenuDeRelacionamento(personagemSelecionado, personagemEscolhido)
+            const urlInteracoes = "https://emilyspecht.github.io/the-cresim/interacoes.json"
+            const listaInteracoes = await getDados(urlInteracoes)
+
+            if(opcao === "INIMIZADE") {
+              const interacao = await exibirMenuInimizade(listaInteracoes)
+            }
+            else if(opcao === "NEUTRO") {
+              const interacao = await exibirMenuNeutro(listaInteracoes)
+            }
+            else if(opcao === "AMIZADE") {
+              const interacao = await exibirMenuAmizade(listaInteracoes)
+            }
+            else {
+              const interacao = await exibirMenuAmor(listaInteracoes)
+            }
+
             await useQuestion("Pressione ENTER para continuar...")
             break;
         

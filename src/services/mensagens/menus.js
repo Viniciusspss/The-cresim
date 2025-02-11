@@ -141,23 +141,26 @@ export async function exibirMenuDeRelacionamento(personagemSelecionado, personag
   let opcoes = [];
 
   if (pontosRelacionamento < 0) {
-    relacionamentoDescricao += "INIMIZADE\n";
-    opcoes.unshift("INIMIZADE");
-  } 
-  else {
+    relacionamentoDescricao += "INIMIZADE\n";    
+    opcoes.push("INIMIZADE")
     opcoes.push("NEUTRO");
-    relacionamentoDescricao += "NEUTRO\n";
-    
-    if (pontosRelacionamento >= 11 && pontosRelacionamento <= 25) {
-      relacionamentoDescricao += "AMIZADE\n";
-      opcoes.push("AMIZADE");
-    } 
-    else if (pontosRelacionamento > 25) {
-      relacionamentoDescricao += "AMOR\n";
-      opcoes.push("AMIZADE");
-      opcoes.push("AMOR");
-    }
+  } 
+  else if(pontosRelacionamento <= 10) {
+    relacionamentoDescricao += "NEUTRO\n";    
+    opcoes.push("NEUTRO");
   }
+  else if(pontosRelacionamento <= 25) {
+    relacionamentoDescricao += "AMIZADE\n";
+    opcoes.push("NEUTRO");
+    opcoes.push("AMIZADE");
+  }
+  else if(pontosRelacionamento > 25) {
+    relacionamentoDescricao += "AMOR\n";
+    opcoes.push("NEUTRO");
+    opcoes.push("AMIZADE");
+    opcoes.push("AMOR");
+  }
+
 
   console.log(relacionamentoDescricao);
   console.log("========== AÇÕES DE RELACIONAMENTO ==========");
@@ -168,12 +171,94 @@ export async function exibirMenuDeRelacionamento(personagemSelecionado, personag
   
   console.log("=============================================\n");
 
-  const op = parseInt(await useQuestion("\nSelecione a opção: "));
+  let opcao = 0
+  do {
+    opcao = parseInt(await useQuestion("\nSelecione a opção: "));
+
+    if(opcao < 1 || opcao > opcoes.length) {
+      console.log("Opção inválida")
+    }
+  } while(opcao < 1 || opcao > opcoes.length)
   
-  if (isNaN(op) || op < 1 || op > opcoes.length) {
-    console.log("\nOpção inválida!\n");
-    return null;
-  }
+  return opcoes[opcao - 1];
+}
+
+export async function exibirMenuInimizade(listaInteracoes) {
+  const menu = listaInteracoes.INIMIZADE
+  let opcao = 0
   
-  return opcoes[op - 1];
+  console.clear()
+
+  do {    
+    console.log("\n========== AÇÕES RELACIONAMENTO INIMIZADE ==========");
+    menu.forEach((opcao) => {
+      console.log(`${opcao.id}. ${opcao.interacao}`)
+    })
+    console.log("====================================================\n");
+    opcao = parseInt(await useQuestion("\nSelecione a opção: "));
+
+    if(opcao < 1 || opcao > menu.length) {
+      console.log("\nOpção inválida.")
+    }
+  } while (opcao < 1 || opcao > menu.length)
+}
+
+export async function exibirMenuNeutro(listaInteracoes) {
+  const menu = listaInteracoes.NEUTRO
+  let opcao = 0
+  
+  console.clear()
+
+  do {    
+    console.log("\n========== AÇÕES RELACIONAMENTO NEUTRO ==========");
+    menu.forEach((opcao) => {
+      console.log(`${opcao.id}. ${opcao.interacao}`)
+    })
+    console.log("=================================================\n");
+    opcao = parseInt(await useQuestion("\nSelecione a opção: "));
+
+    if(opcao < 1 || opcao > menu.length) {
+      console.log("\nOpção inválida.")
+    }
+  } while (opcao < 1 || opcao > menu.length)
+}
+
+export async function exibirMenuAmizade(listaInteracoes) {
+  const menu = listaInteracoes.AMIZADE
+  let opcao = 0
+  
+  console.clear()
+
+  do {    
+    console.log("\n========== AÇÕES RELACIONAMENTO AMIZADE ==========");
+    menu.forEach((opcao) => {
+      console.log(`${opcao.id}. ${opcao.interacao}`)
+    })
+    console.log("===================================================\n");
+    opcao = parseInt(await useQuestion("\nSelecione a opção: "));
+
+    if(opcao < 1 || opcao > menu.length) {
+      console.log("\nOpção inválida.")
+    }
+  } while (opcao < 1 || opcao > menu.length)
+}
+
+export async function exibirMenuAmor(listaInteracoes) {
+  const menu = listaInteracoes.AMOR
+  let opcao = 0
+  
+  console.clear()
+
+  do {    
+    console.log("\n========== AÇÕES RELACIONAMENTO AMOR ==========");
+    menu.forEach((opcao) => {
+      console.log(`${opcao.id}. ${opcao.interacao}`)
+    })
+    console.log("===============================================\n");
+    opcao = parseInt(await useQuestion("\nSelecione a opção: "));
+
+    if(opcao < 1 || opcao > menu.length) {
+      console.log("\nOpção inválida.")
+    }
+  } while (opcao < 1 || opcao > menu.length)
 }
