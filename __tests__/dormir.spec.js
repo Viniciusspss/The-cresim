@@ -23,5 +23,10 @@ describe('Testes de Dormir', () => {
     expect(personagemAtualizado.energia).toBe(20)
   })
 
-  it('Deve retornar um erro se o tempo de sono for menor que 0', async () => {})
+  it('Deve retornar um erro se o tempo de sono for menor que 0', async () => {
+
+    let personagem = criarPersonagem("Cresinho")
+ 
+    expect(()=>dormir(personagem.id, -1)).toThrow("Insira um tempo válido.")
+  })
 })

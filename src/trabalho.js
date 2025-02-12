@@ -19,6 +19,7 @@ export function trabalhar(personagemId, empregos, idEmprego){
   const ENERGIA_GASTA = 10
   const TEMPO_TRABALHO = 20000
   const DESCONTO_SALARIO_HIGIENE = 0.90
+  const HIGIENE_GASTA_POR_ENERGIA = HIGIENE_GASTA/ENERGIA_GASTA
   
   if(personagem.higiene - HIGIENE_GASTA < 4){
       salarioDiario = salarioDiario * DESCONTO_SALARIO_HIGIENE
@@ -46,7 +47,6 @@ export function trabalhar(personagemId, empregos, idEmprego){
   salarioTotal = bunusCheat ? salarioTotal * (1 + bunusCheat.valor/100) : salarioTotal
 
   if (personagem.energia <= 10) {
-      const HIGIENE_GASTA_POR_ENERGIA = HIGIENE_GASTA/ENERGIA_GASTA
       const higieneGasta = HIGIENE_GASTA_POR_ENERGIA * ENERGIA_PARA_GASTAR
 
       personagem.cresceleons += salarioTotal
@@ -66,7 +66,7 @@ export function trabalhar(personagemId, empregos, idEmprego){
       let salarioAReceber = CRESCELEON_PARA_CADA_PONTO_ENERGIA * ENERGIA_PARA_TRABALHAR
       salarioAReceber = bunusCheat ? salarioAReceber * (1 + bunusCheat.valor/100) : salarioAReceber
 
-      personagem.energia = 2
+      personagem.energia -= ENERGIA_PARA_TRABALHAR
       personagem.cresceleons += salarioAReceber
       personagem.vida -= TEMPO_PARA_TRABALHAR_COM_ENERGIA_ONZE
       personagem.higiene -= higieneGasta
