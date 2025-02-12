@@ -1,34 +1,117 @@
+import { getDados } from "./services/requisicoes/requisicoes"
 import { useQuestion } from "./services/question/use-question"
-import { question } from "./question"
 import { defineAspiracao, evoluirHabilidade } from "./habilidade"
 import { buscarItens, comprarItem } from "./itens"
 import { buscaPersonagem, buscaPersonagens, criarPersonagem } from "./personagem"
 import { dormir } from './dormir'
 import { relacionarPersonagens } from './relacionamento'
 import { tomarBanho } from "./banho"
-import { trabalhar } from "./trabalhar"
-import { getDados } from "./services/requisicoes/requisicoes"
+import { trabalhar } from "./trabalho"
+import { aplicaCheat } from "./cheats"
 
-export async function question(pergunta, personagemId) {
-  let valorEhCheat = false
-  let value
+// MENU PRINCIPAL
+export async function exibeMenuInicial() {
+  console.clear()
+  console.log("============== MENU ==============")
+  console.log("1. Criar novo personagem")
+  console.log("2. Selecionar personagem")
+  console.log("0. Sair do jogo")
+  console.log("==================================")
+
+  let opcao = 0
+  let interagindo = false
   do {
-    value = await useQuestion(pergunta)
-    if (!personagemId) {
-      break
-    }
-    const resultado = await aplicaCheat(personagemId, value)
-    if (resultado) {
-      valorEhCheat = true
-      console.log('Um cheat foi aplicado')
-    } else {
-      valorEhCheat = false
-    }
-  } while(valorEhCheat)
-  return value
+    opcao = parseInt(await question("Selecione uma opção:"))
+  } while (opcao < 0 || opcao > 2)
+
+  switch (opcao) {
+    case 1:                
+      await menuCriarPersoangem()
+      break;
+
+    case 2:
+      interagindo = true
+      let personagemSelecionado = await exibirPersonagens()
+
+      while (interagindo) {
+        interagindo = await exibirInteracoes(personagemSelecionado.id)
+      }
+      break;
+
+    case 0:
+      return true
+
+    default:
+      console.log("Opção inválida.");
+      break;
+  }
 }
 
+// MENU DO PERSONAGEM
+export async function exibirInteracoes(personagemId){
+  const personagem = buscaPersonagem(personagemId)
+
+  console.clear()
+  exibirPersonagemSelecionado(personagem.id)
+  console.log("============== ATIVIDADES ==============")
+  console.log("1. Dormir")
+  console.log("2. Trabalhar")
+  console.log("3. Comprar item")
+  console.log("4. Evoluir habilidade")
+  console.log("5. Tomar banho")
+  console.log("6. Relacionar")
+  console.log("0. Voltar para menu inicial")
+  console.log("========================================")
+
+  let opcao = 0
+  do {
+    opcao = parseInt(await question("Selecione a opção: ", personagemId))
+  } while (opcao < 0 || opcao > 6)
+
+  switch (opcao) {
+    case 1:
+      await menuDormir(personagemId)
+      break;
+
+    case 2:
+      await menuTrabalhar(personagemId)
+      break;
+
+    case 3:
+      await menuComprarItem(personagemId)
+      break;
+  
+    case 4: {
+      await menuEvoluirHabilidade(personagemId)
+      break;
+    }
+
+    case 5: {
+      await menuTomarBanho(personagemId)
+      break;
+    }
+
+    case 6:
+      await menuRelacionamento(personagemId)
+      break;
+
+    case 0:
+      return false
+
+    default:
+      console.log("Opção inválida.");
+      break
+  }
+
+  return true
+}
+
+// TELA CRIAR PERSONAGEM
 export async function menuCriarPersoangem() {
+  console.clear()
+  console.log("============== CRIAR PERSONAGEM ==============")
+  console.log("Crie um novo personagem para começar a jogar!")
+  console.log("==============================================")
   const nome = await useQuestion("\nQual o nome do personagem? ");
   const personagem = criarPersonagem(nome)
 
@@ -40,20 +123,24 @@ export async function menuCriarPersoangem() {
   } while (aspiracao === null)
 
   console.clear();
-  console.log("\nPersonagem criado!\n");            
-  await useQuestion("Pressione ENTER para continuar...")                           
-  console.clear(); 
+  console.log("============== CRIAR PERSONAGEM ==============")
+  console.log("Personagem criado!")   
+  console.log("==============================================")
+  
+  await mensagemContinue()
 }
 
 export async function exibeMenuAspiracoes() {
   console.clear()
-  console.log("====== ESCOLHA UMA ASPIRAÇÃO ======")
+  console.log("=========== ESCOLHA UMA HABILIDADE ===========")
+  console.log("Escolha uma habilidade para o seu personagem:")
+  console.log("==============================================")
   console.log("1. GASTRONOMIA");
   console.log("2. PINTURA");
   console.log("3. JOGOS");
   console.log("4. JARDINAGEM");
   console.log("5. MÚSICA");
-  console.log("===================================")
+  console.log("==============================================")
 
   const aspiracaoSelecionada = parseInt(await question("Selecione a opção: "));
 
@@ -79,240 +166,210 @@ export async function exibeMenuAspiracoes() {
   }
 }
 
+// PERSONAGEM
 export async function exibirPersonagens() {
-  let personagens = buscaPersonagens()
-  personagens = personagens.filter(personagem => personagem.vida > 0)
-
-  if (personagens.length > 0) {
-    console.clear()
-    console.log("============== PERSONAGENS ==============")
-    personagens.forEach((personagem, i) => {
-      console.log(`${i+1}. ${personagem.nome}`)
-    });
-  console.log("==========================================")
-  }else{
-    console.log("Você não possui nenhum personagem criado!")
-    return null
-  }
-
-
   try {
-    const personagemSelecionado = parseInt(await question("Selecione a opção: "));
+    let personagens = buscaPersonagens()
+    personagens = personagens.filter(personagem => personagem.vida > 0)
+
+    if (personagens.length > 0) {
+      console.clear()
+      console.log("============== PERSONAGENS ==============")
+      personagens.forEach((personagem, i) => {
+        console.log(`${i+1}. ${personagem.nome}`)
+      });
+      console.log("=========================================")
+    }else{
+      console.log("Você não possui nenhum personagem criado!")
+      return null
+    }
+
+    const personagemSelecionado = parseInt(await useQuestion("Selecione a opção: "));
     return personagens[personagemSelecionado - 1]
   } catch (error) {
-    console.log("\nEsse personagem não existe")
-    return null
+    console.log(error.message)
+    await mensagemContinue()
   }
-  
 }
 
+// TRABALHO
 export async function exibirEmpregos(personagemSelecionado, empregos) {
   console.clear()
-  console.log(`\nPersonagem selecionado: ${personagemSelecionado.nome}`)
-  console.log("\n============== EMPREGOS ==============")
+  exibirPersonagemSelecionado(personagemSelecionado.id)
+  console.log("=============== EMPREGOS ===============")
   empregos.forEach((emprego, index) => {
     console.log(`${index + 1}. ${emprego.cargo}`)
   })
-  console.log("==========================================")
+  console.log("========================================")
 
-  return parseInt(await question("\nSelecione a opção: ", personagemSelecionado.id));
+  return parseInt(await question("Selecione a opção: ", personagemSelecionado.id));
 }
 
-export async function exibeMenuInicial() {
-  console.clear()
-  console.log("============== MENU ==============")
-  console.log("1. Criar novo personagem")
-  console.log("2. Selecionar personagem")
-  console.log("0. Sair do jogo")
-  console.log("==================================")
+export async function menuTrabalhar(personagemId) {
+  try {
+    const personagem = buscaPersonagem(personagemId)
 
-  let opcao = 0
-  do {
-    opcao = parseInt(await question("Selecione uma opção:"))
-  } while (opcao < 0 || opcao > 2)
+    const urlEmprego = "https://emilyspecht.github.io/the-cresim/empregos.json"
+    const empregos = await getDados(urlEmprego) 
+    const opcaoTrabalho = await exibirEmpregos(personagem, empregos)  
+    const TEMPO_TRABALHO = 20000           
+    
+      
+    trabalhar(personagem.id, empregos, opcaoTrabalho)
+    
+    console.log(`\n${personagem.nome} esta trabalhando...`)
+    await new Promise(resolve => setTimeout(resolve, TEMPO_TRABALHO));
+    console.log(`\n${personagem.nome} terminou sua jornada de trabalho!`)
 
-  switch (opcao) {
-    case 1:                
-      await menuCriarPersoangem()
-      break;
-
-    case 2:
-      try {
-        let personagemSelecionado = await exibirPersonagens()
-        const interacaoSelecionada = await exibirInteracoes(personagemSelecionado)
-
-        console.clear()
-        switch (interacaoSelecionada) {
-          case 1:
-            const tempo = parseInt(await question("\nDigite o tempo que deseja dormir (em segundos): ", personagemSelecionado.id));
-            dormir(personagemSelecionado.id, tempo)
-            console.log(`${personagemSelecionado.nome} esta dormindo...`)
-
-            await new Promise(resolve => setTimeout(resolve, tempo * 1000));
-            console.log(`${personagemSelecionado.nome} acordou!`)
-
-            await useQuestion('\nPressione ENTER para continuar...')
-            console.clear()
-            break;
-
-          case 2:
-            const urlEmprego = "https://emilyspecht.github.io/the-cresim/empregos.json"
-            const empregos = await getDados(urlEmprego) 
-            const opcaoTrabalho = await exibirEmpregos(personagemSelecionado, empregos)  
-            const TEMPO_TRABALHO = 20000           
-            
-              
-            trabalhar(personagemSelecionado.id, empregos, opcaoTrabalho)
-            
-            console.log(`\n${personagemSelecionado.nome} esta trabalhando...`)
-            await new Promise(resolve => setTimeout(resolve, TEMPO_TRABALHO));
-            console.log(`\n${personagemSelecionado.nome} terminou sua jornada de trabalho!`)
-
-            await useQuestion("\nPressione ENTER para continuar...")
-            console.clear()
-            break;
-
-          case 3:
-            try {
-              await menuComprarItem(personagemSelecionado.id)
-            } catch(error) {
-              console.log(error)
-            }
-            break;
-        
-          case 4: {
-            try {
-              await menuEvoluirHabilidade(personagemSelecionado.id)
-            } catch (error) {
-              console.log(error)
-            }
-
-            break
-          }
-
-          case 5: {
-            try {
-              tomarBanho(personagemSelecionado.id)
-              console.log(`${personagemSelecionado.nome} está tomando banho...`)
-              await new Promise(resolve => setTimeout(resolve, 3000))
-              console.log(`${personagemSelecionado.nome} terminou seu banho!`)
-
-              await useQuestion("\nPressione ENTER para continuar...")
-              console.clear()
-            } catch (error) {
-              console.log(error)
-            }
-
-            break
-          }
-
-          case 6:
-            try {
-              await menuRelacionamento(personagemSelecionado.id)
-            } catch (error) {
-              console.log(error)
-
-              await useQuestion("\nPressione ENTER para continuar...")
-              console.clear()
-            }
-            break;
-
-          default:
-            break;
-        }
-
-      } catch (error) {
-        console.log(error)
-      }
-
-      break;
-
-    case 0:
-      return true
-
-    default:
-      console.log("Opção inválida.");
-      break;
+    await mensagemContinue()
+  } catch (error) {
+    console.log(error.message)
+    await mensagemContinue()
   }
 }
 
-export async function menuPersonagem(personagemId) {
-  //TODO: implementar!
-}
-
-export async function menuComprarItem(personagemId) {
-  const itens = await buscarItens()
-
-  console.clear()
-  console.log("============== COMPRAR ITEM ==============")
-  console.log("ID | ITEM (PONTOS)     | VALOR | CATEGORIA")
-  console.log("------------------------------------------")
-  for (const item of itens) {
-    console.log(`${item.id}. ${item.nome} (${item.pontos}) - R$ ${item.preco} - ${item.categoria}`)
-  }
-  console.log("==========================================")
-
-  let itemSelecionado = null
-  do {
-    itemSelecionado = parseInt(await question("Selecione uma opção para compra:", personagemId));
-
-    if (itemSelecionado < 1 || itemSelecionado > itens.length) {
-      console.log("Item inválido.")
-    }
-  } while (!itemSelecionado || itemSelecionado < 0 || itemSelecionado > itens.length)
-
-  await comprarItem(personagemId, itens[itemSelecionado - 1])
-
-  console.clear()
-  console.log("============== COMPRAR ITEM ==============")
-  console.log(`${itens[itemSelecionado].nome} foi comprado com sucesso.`)
-
-  await useQuestion('Pressione ENTER para continuar...')
-}
-
-export async function menuEvoluirHabilidade(personagemId) {
+// DORMIR
+export async function menuDormir(personagemId) {
   const personagem = await buscaPersonagem(personagemId)
 
-  console.clear()
-  console.log("=============== MEUS ITENS ===============")
-  let index = 1
-  for (const item of personagem.itens) {
-    console.log(`${index}. ${item.nome} (${item.pontos}) - ${item.categoria}`)
-    index++
-  }
-  console.log("==========================================")
-  const itemSelecionado = parseInt(await question("Selecione um item para evoluir habilidade:", personagemId))
+  const tempo = parseInt(await question("\nDigite o tempo que deseja dormir (em segundos): ", personagem.id));
+  dormir(personagem.id, tempo)
+  console.log(`${personagem.nome} esta dormindo...`)
+
+  await new Promise(resolve => setTimeout(resolve, tempo * 1000));
+  console.log(`${personagem.nome} acordou!`)
+
+  await mensagemContinue()
+}
+
+// BANHO
+export async function menuTomarBanho(personagemId) {
   try {
+    const personagem = buscaPersonagem(personagemId)
+
+    tomarBanho(personagem.id)
+    console.log(`${personagem.nome} está tomando banho...`)
+    await new Promise(resolve => setTimeout(resolve, 3000))
+    console.log(`${personagem.nome} terminou seu banho!`)
+
+    await mensagemContinue()
+  } catch (error) {
+    console.log(error.message)
+    await mensagemContinue()
+  }
+}
+
+// ITENS
+export async function menuComprarItem(personagemId) {
+  try {
+    const itens = await buscarItens()
+
+    console.clear()
+    exibirPersonagemSelecionado(personagemId)
+    console.log("============== COMPRAR ITEM ==============")
+    console.log("ID | ITEM (PONTOS)     | VALOR | CATEGORIA")
+    console.log("------------------------------------------")
+    for (const item of itens) {
+      console.log(`${item.id}. ${item.nome} (${item.pontos}) - R$ ${item.preco} - ${item.categoria}`)
+    }
+    console.log("==========================================")
+
+    let itemSelecionado = null
+    do {
+      itemSelecionado = parseInt(await question("Selecione uma opção para compra:", personagemId));
+
+      if (itemSelecionado < 1 || itemSelecionado > itens.length) {
+        console.log("Item inválido.")
+      }
+    } while (!itemSelecionado || itemSelecionado < 0 || itemSelecionado > itens.length)
+
+    await comprarItem(personagemId, itens[itemSelecionado - 1])
+
+    console.clear()
+    console.log("============== COMPRAR ITEM ==============")
+    console.log(`${itens[itemSelecionado].nome} foi comprado com sucesso.`)
+
+    await mensagemContinue()
+  } catch (error) {
+    console.log(error.message)
+    await mensagemContinue()
+  }
+}
+
+// HABILIDADES
+export async function menuEvoluirHabilidade(personagemId) {
+  try {
+    const personagem = await buscaPersonagem(personagemId)
+
+    console.clear()
+    exibirPersonagemSelecionado(personagemId)
+    console.log("=============== MEUS ITENS ===============")
+    let index = 1
+    for (const item of personagem.itens) {
+      console.log(`${index}. ${item.nome} (${item.pontos}) - ${item.categoria}`)
+      index++
+    }
+    console.log("==========================================")
+    const itemSelecionado = parseInt(await question("Selecione um item para evoluir habilidade:", personagemId))
     await evoluirHabilidade(personagemId, personagem.itens[itemSelecionado - 1])
     console.clear()
     console.log(`${personagem.nome} está evoluindo a habilidade...`)
     await new Promise(resolve => setTimeout(resolve, 8000))
     console.clear()
     console.log(`${personagem.nome} evoluiu a habilidade ${personagem.itens[itemSelecionado - 1].categoria.toLowerCase()}!`)
-    await useQuestion("\nPressione ENTER para continuar...")
-    console.clear()
+    
+    await mensagemContinue()
   } catch (error) {
     console.log(error)
   }
 }
 
-export async function exibirInteracoes(personagemSelecionado){
-  if(!personagemSelecionado){
-    console.log("Nenhum personagem selecionado")
-    return null
-  }
-  console.clear()
-  console.log(`Personagem selecionado: ${personagemSelecionado.nome}\n`)
-  console.log("============== ATIVIDADES ==============")
-  console.log("1. Dormir")
-  console.log("2. Trabalhar")
-  console.log("3. Comprar item")
-  console.log("4. Evoluir habilidade")
-  console.log("5. Tomar banho")
-  console.log("6. Relacionar")
-  console.log("==========================================")
+// RELACIONAMENTO
+export async function menuRelacionamento(personagemId) {
+  try {
+    const personagemEscolhido = await exibirOpcoesDeRelacionamento(personagemId)
+    
+    const opcao = await exibirMenuDeRelacionamento(personagemId, personagemEscolhido.id)
+    const urlInteracoes = "https://emilyspecht.github.io/the-cresim/interacoes.json"
+    const listaInteracoes = await getDados(urlInteracoes)
+    let interacao = 0
 
-  return parseInt(await question("Selecione a opção: ", personagemSelecionado.id));
+    if(opcao === "INIMIZADE") {
+      interacao = await exibirMenuPorNivel(listaInteracoes.INIMIZADE, "INIMIZADE 💔", personagemId, personagemEscolhido.id)
+    }
+    else if(opcao === "NEUTRO") {
+      interacao = await exibirMenuPorNivel(listaInteracoes.NEUTRO, "NEUTRO 🌱", personagemId, personagemEscolhido.id)
+    }
+    else if(opcao === "AMIZADE") {
+      interacao = await exibirMenuPorNivel(listaInteracoes.AMIZADE, "AMIZADE 🌱", personagemId, personagemEscolhido.id)
+    }
+    else {
+      interacao = await exibirMenuPorNivel(listaInteracoes.AMOR, "AMOR 🌱", personagemId, personagemEscolhido.id)
+    }
+
+    console.clear()
+
+    const energiaFabricyo = interacao.energia  
+    const energiaAna = Math.ceil(interacao.energia / 2)
+    const vidaPerdida = interacao.energia * 2000;      
+    const [personagemPrincipal, personagemInteracao] = await relacionarPersonagens(personagemId, personagemEscolhido.id, interacao)
+
+    console.log(`${personagemPrincipal.nome} fez a ação de '${interacao.interacao}' com ${personagemInteracao.nome}\n`);
+    console.log(`${personagemPrincipal.nome}:`);
+    console.log(`   Energia perdida: ${energiaFabricyo}`);
+    console.log(`   Vida perdida: ${vidaPerdida}`);
+    console.log(`   Pontos acumulados: ${interacao.pontos}\n\n`);
+    
+    console.log(`${personagemInteracao.nome}:`);
+    console.log(`   Energia perdida: ${energiaAna}`);
+    console.log(`   Vida perdida: ${vidaPerdida}`);
+    console.log(`   Pontos acumulados: ${interacao.pontos}\n`);       
+
+    await mensagemContinue()
+  } catch (error) {
+    console.log(error.message)
+    await mensagemContinue()
+  }
 }
 
 export async function exibirOpcoesDeRelacionamento(personagemId) {
@@ -425,45 +482,31 @@ export async function exibirMenuPorNivel(nivelMenu, nomeNivel, personagemId, per
     return nivelMenu[opcao - 1]
 }
 
-export async function menuRelacionamento(personagemId) {
-  const personagemEscolhido = await exibirOpcoesDeRelacionamento(personagemId)
-  
-  const opcao = await exibirMenuDeRelacionamento(personagemId, personagemEscolhido.id)
-  const urlInteracoes = "https://emilyspecht.github.io/the-cresim/interacoes.json"
-  const listaInteracoes = await getDados(urlInteracoes)
-  let interacao = 0
+// CHEATS
+export async function question(pergunta, personagemId) {
+  let valorEhCheat = false
+  let value
+  do {
+    value = await useQuestion(pergunta)
+    const resultado = await aplicaCheat(personagemId, value)
 
-  if(opcao === "INIMIZADE") {
-    interacao = await exibirMenuPorNivel(listaInteracoes.INIMIZADE, "INIMIZADE 💔", personagemId, personagemEscolhido.id)
-  }
-  else if(opcao === "NEUTRO") {
-    interacao = await exibirMenuPorNivel(listaInteracoes.NEUTRO, "NEUTRO 🌱", personagemId, personagemEscolhido.id)
-  }
-  else if(opcao === "AMIZADE") {
-    interacao = await exibirMenuPorNivel(listaInteracoes.AMIZADE, "AMIZADE 🌱", personagemId, personagemEscolhido.id)
-  }
-  else {
-    interacao = await exibirMenuPorNivel(listaInteracoes.AMOR, "AMOR 🌱", personagemId, personagemEscolhido.id)
-  }
+    if (resultado) {
+      valorEhCheat = true
+      console.log('Um cheat foi aplicado')
+    } else {
+      valorEhCheat = false
+    }
+  } while(valorEhCheat)
+  return value
+}
 
-  console.clear()
+export function exibirPersonagemSelecionado(personagemId) {
+  const personagem = buscaPersonagem(personagemId)
 
-  const energiaFabricyo = interacao.energia  
-  const energiaAna = Math.ceil(interacao.energia / 2)
-  const vidaPerdida = interacao.energia * 2000;      
-  const [personagemPrincipal, personagemInteracao] = await relacionarPersonagens(personagemId, personagemEscolhido.id, interacao)
+  console.log(`Personagem: ${personagem.nome} | Energia: ${personagem.energia} | Vida: ${personagem.vida} | Habilidade: ${personagem.aspiracao}\n`)
+}
 
-  console.log(`${personagemPrincipal.nome} fez a ação de '${interacao.interacao}' com ${personagemInteracao.nome}\n`);
-  console.log(`${personagemPrincipal.nome}:`);
-  console.log(`   Energia perdida: ${energiaFabricyo}`);
-  console.log(`   Vida perdida: ${vidaPerdida}`);
-  console.log(`   Pontos acumulados: ${interacao.pontos}\n\n`);
-  
-  console.log(`${personagemInteracao.nome}:`);
-  console.log(`   Energia perdida: ${energiaAna}`);
-  console.log(`   Vida perdida: ${vidaPerdida}`);
-  console.log(`   Pontos acumulados: ${interacao.pontos}\n`);       
-
+export async function mensagemContinue() {
   await useQuestion("\nPressione ENTER para continuar...")
   console.clear()
 }
