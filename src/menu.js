@@ -533,8 +533,15 @@ export async function question(pergunta, personagemId) {
 
 export function exibirPersonagemSelecionado(personagemId) {
   const personagem = buscaPersonagem(personagemId)
+  const habilidade = personagem.habilidades[personagem.aspiracao]
 
-  console.log(`Personagem: ${personagem.nome} | Energia: ${personagem.energia} | Vida: ${personagem.vida} | Habilidade: ${personagem.aspiracao}\n`)
+  const nome = `😀 ${personagem.nome} (♥️ ${personagem.vida})`
+  const energIcone = personagem.energia > 10 ? '🔋' : '🪫'
+  const energia = `${energIcone} ${Number(personagem.energia).toFixed(2)}`
+  const aspiracao = `💼 ${personagem.aspiracao}`
+  const nivelHabilidade = `${habilidade.nivel} (${habilidade.pontos})`
+
+  console.log(`${nome} | ${energia} | ${aspiracao} - ${nivelHabilidade}`)
 }
 
 export async function mensagemContinue() {
