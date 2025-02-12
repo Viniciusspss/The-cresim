@@ -3,9 +3,14 @@ import { criarPersonagem } from "../src/personagem";
 import { useLocalStorage } from "../src/services/local-storage/use-local-storage";
 
 describe('Relacionamento', () => {
+    let localStorage = useLocalStorage()
+
     beforeEach(() => {
-        const localStorage = useLocalStorage()
-        localStorage.setObject('personagens', [])
+      localStorage.setObject('personagens', [])
+    })
+  
+    afterAll(() => {
+      localStorage.setObject('personagens', [])
     })
     
     it('Deve evoluir o relacionamento de dois Cresims para AMIZADE', async () =>  {

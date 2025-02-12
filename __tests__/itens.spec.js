@@ -3,10 +3,15 @@ import { criarPersonagem } from "../src/personagem"
 import { useLocalStorage } from "../src/services/local-storage/use-local-storage"
 
 describe('Itens', () => {
-	beforeEach(() => {
-		const localStorage = useLocalStorage()
-		localStorage.setObject('personagens', [])
-	})
+	let localStorage = useLocalStorage()
+
+  beforeEach(() => {
+    localStorage.setObject('personagens', [])
+  })
+
+  afterAll(() => {
+    localStorage.setObject('personagens', [])
+  })
 
 	it('Deve conseguir comprar um item de habilidade', async () => {
 		const personagem = criarPersonagem()

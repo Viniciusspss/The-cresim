@@ -4,8 +4,13 @@ import { buscarItens } from "../src/itens"
 import { useLocalStorage } from "../src/services/local-storage/use-local-storage"
 
 describe('Aspiracoes', () => {
+  let localStorage = useLocalStorage()
+
   beforeEach(() => {
-    const localStorage = useLocalStorage()
+    localStorage.setObject('personagens', [])
+  })
+
+  afterAll(() => {
     localStorage.setObject('personagens', [])
   })
 

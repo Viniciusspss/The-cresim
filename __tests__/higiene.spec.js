@@ -1,13 +1,16 @@
-import { defineAspiracao } from "../src/aspiracoes"
-import { tomarBanho, trabalhar } from "../src/interacoes"
-import { atualizaPersonagem, buscaPersonagem, criarPersonagem } from "../src/personagem"
+import { tomarBanho } from "../src/interacoes"
+import { buscaPersonagem, criarPersonagem } from "../src/personagem"
 import { useLocalStorage } from "../src/services/local-storage/use-local-storage"
-import { getDados } from "../src/services/requisicoes/requisicoes"
 
 describe('Higiene', () => {
+    let localStorage = useLocalStorage()
+
     beforeEach(() => {
-    const localStorage = useLocalStorage()
-    localStorage.setObject('personagens', [])
+      localStorage.setObject('personagens', [])
+    })
+  
+    afterAll(() => {
+      localStorage.setObject('personagens', [])
     })
     
     it('Deve descontar 10 Cresceleons ao tomar banho', async () => {

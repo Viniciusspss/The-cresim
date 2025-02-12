@@ -4,11 +4,16 @@ import { aplicaCheat } from "../src/cheats"
 import { useLocalStorage } from "../src/services/local-storage/use-local-storage"
 
 describe('cheats', () => {
+  let localStorage = useLocalStorage()
+
   beforeEach(() => {
-    const localStorage = useLocalStorage()
     localStorage.setObject('personagens', [])
   })
 
+  afterAll(() => {
+    localStorage.setObject('personagens', [])
+  })
+  
   it('Deve conseguir aplicar o cheat SORTENAVIDA e receber as recompensas', async () => {
     let personagem = criarPersonagem('Cleitin')
     personagem = defineAspiracao(personagem, 'JOGOS')
