@@ -566,8 +566,9 @@ export function exibirPersonagemSelecionado(personagemId) {
   const aspiracao = `💼 ${personagem.aspiracao}`
   const cresceleons = `💰 ${personagem.cresceleons}`
   const nivelHabilidade = `${habilidade.nivel} (${habilidade.pontos})`
+  const nivelHigiene = `🚿 ${personagem.higiene}`
 
-  console.log(`${nome} | ${energia} | ${cresceleons} | ${aspiracao} - ${nivelHabilidade}`)
+  console.log(`${nome} | ${energia} | ${nivelHigiene} | ${cresceleons} | ${aspiracao} - ${nivelHabilidade}`)
 }
 
 export async function mensagemContinue() {
