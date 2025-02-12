@@ -7,7 +7,7 @@ export async function aplicaCheat(personagemId, codigo) {
   const URL = 'https://emilyspecht.github.io/the-cresim/cheats.json'
   const cheats = await getDados(URL)
 
-  const cheat = cheats.find(cheat => cheat.codigo === codigo)
+  const cheat = cheats.find(c => c.codigo === codigo)
   
   if (!cheat) return null
 

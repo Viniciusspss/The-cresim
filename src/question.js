@@ -9,7 +9,7 @@ export async function question(pergunta, personagemId) {
     value = await useQuestion(pergunta)
 
     if (!personagemId) {
-      return value
+      break
     }
 
     const resultado = await aplicaCheat(personagemId, value)

@@ -1,4 +1,4 @@
-import { exibeMenuInicial } from "./src/services/menu"
+import { exibeMenuInicial } from "./src/menu"
 
 const main = async () => {
   let finalizarJogo = false

@@ -1,10 +1,10 @@
-import { defineAspiracao, evoluirHabilidade } from "../aspiracoes"
-import { buscarItens, comprarItem } from "../itens"
-import { buscaPersonagem, buscaPersonagens, criarPersonagem } from "../personagem"
-import { question } from "../question"
-import { useQuestion } from "./question/use-question"
-import { dormir, relacionarPersonagens, tomarBanho, trabalhar } from '../interacoes'
-import { getDados } from "./requisicoes/requisicoes"
+import { defineAspiracao, evoluirHabilidade } from "./aspiracoes"
+import { buscarItens, comprarItem } from "./itens"
+import { buscaPersonagem, buscaPersonagens, criarPersonagem } from "./personagem"
+import { question } from "./question"
+import { useQuestion } from "./services/question/use-question"
+import { dormir, relacionarPersonagens, tomarBanho, trabalhar } from './interacoes'
+import { getDados } from "./services/requisicoes/requisicoes"
 
 export async function menuCriarPersoangem() {
   const nome = await useQuestion("\nQual o nome do personagem? ");
