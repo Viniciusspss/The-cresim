@@ -250,16 +250,27 @@ export async function menuTrabalhar(personagemId) {
 
 // DORMIR
 export async function menuDormir(personagemId) {
-  const personagem = await buscaPersonagem(personagemId)
+  try {
+    const personagem = await buscaPersonagem(personagemId)
 
-  const tempo = parseInt(await question("\nDigite o tempo que deseja dormir (em segundos): ", personagem.id));
-  dormir(personagem.id, tempo)
-  console.log(`${personagem.nome} esta dormindo...`)
-
-  await new Promise(resolve => setTimeout(resolve, tempo * 1000));
-  console.log(`${personagem.nome} acordou!`)
-
-  await mensagemContinue()
+    console.clear()
+    console.log("================ DORMIR ================")
+    const tempo = parseInt(await question("Digite o tempo que deseja dormir (em segundos): ", personagem.id));
+    dormir(personagem.id, tempo)
+    console.clear()
+    console.log("================ DORMIR ================")
+    console.log(`${personagem.nome} esta dormindo...`)
+  
+    await new Promise(resolve => setTimeout(resolve, tempo * 1000));
+    console.clear()
+    console.log("================ DORMIR ================")
+    console.log(`${personagem.nome} acordou!`)
+  
+    await mensagemContinue()
+  } catch (error) {
+    console.log(error.message)
+    await mensagemContinue()
+  }
 }
 
 // BANHO
