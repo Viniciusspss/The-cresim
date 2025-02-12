@@ -1,4 +1,4 @@
-import { atualizaPersonagem, criarPersonagem } from "../src/personagem"
+import { atualizaPersonagem, buscaPersonagem, criarPersonagem } from "../src/personagem"
 import { defineAspiracao } from '../src/habilidade'
 import { aplicaCheat } from "../src/cheats"
 import { useLocalStorage } from "../src/services/local-storage/use-local-storage"
@@ -32,6 +32,22 @@ describe('Testes de Cheats', () => {
     expect(personagemAtualizado.cresceleons ).toBe(salarioEsperado)
   })
 
+  it('Deve conseguir aplicar o cheat SORTENAVIDA e receber as recompensas se o energia do personagem for exatamente 11', async () => {
+    const urlEmpregos = "https://emilyspecht.github.io/the-cresim/empregos.json"
+    const trabalhos = await getDados(urlEmpregos)
+
+    let personagem = criarPersonagem("Cresinho")
+    personagem = await aplicaCheat(personagem.id, "SORTENAVIDA")
+    personagem.energia = 11
+    atualizaPersonagem(personagem)
+    const id = personagem.id
+
+    const personagemAtualizado = trabalhar(id, trabalhos, 1)
+    const salarioEsperado = 1658.4
+    
+    expect(personagemAtualizado.cresceleons).toBe(salarioEsperado)
+  })
+
   it('Deve conseguir aplicar o cheat DEITADONAREDE e receber as recompensas', async () => {
     let personagem = criarPersonagem('Cleitin')
     personagem = defineAspiracao(personagem.id, 'JOGOS')
@@ -54,6 +70,38 @@ describe('Testes de Cheats', () => {
     expect(personagemAtualizado.habilidades[personagem.aspiracao].pontos).toBe(valorEsperado)
   })
 
+  it('Deve conseguir aplicar o cheat JUNIM e receber as recompensas evoluindo para pleno', async () => {
+    let personagem = criarPersonagem('Cleitin')
+    personagem = defineAspiracao(personagem.id, 'JOGOS')
+    personagem.habilidades[personagem.aspiracao].pontos = 16
+    atualizaPersonagem(personagem)
+    
+    const personagemAtualizado = await aplicaCheat(personagem.id, 'JUNIM')
+    const valorEsperado = 21
+    const nivelEsperado = 'PLENO'
+
+    expect(personagemAtualizado.habilidades[personagem.aspiracao]).toMatchObject({
+      nivel: nivelEsperado,
+      pontos: valorEsperado
+    })
+  })
+
+  it('Deve conseguir aplicar o cheat JUNIM e receber as recompensas evoluindo para senior', async () => {
+    let personagem = criarPersonagem('Cleitin')
+    personagem = defineAspiracao(personagem.id, 'JOGOS')
+    personagem.habilidades[personagem.aspiracao].pontos = 25
+    atualizaPersonagem(personagem)
+    
+    const personagemAtualizado = await aplicaCheat(personagem.id, 'JUNIM')
+    const valorEsperado = 30
+    const nivelEsperado = 'SENIOR'
+
+    expect(personagemAtualizado.habilidades[personagem.aspiracao]).toMatchObject({
+      nivel: nivelEsperado,
+      pontos: valorEsperado
+    })
+  })
+
   it('Deve conseguir aplicar o cheat CAROLINAS e receber as recompensas para a habilidade escolhida', async () => {
     let personagem = criarPersonagem('Cleitin')
     personagem = defineAspiracao(personagem.id, 'JOGOS')
@@ -72,5 +120,14 @@ describe('Testes de Cheats', () => {
     const valorEsperado = 0
 
     expect(personagemAtualizado.vida).toBe(valorEsperado)
+  })
+
+  it('Deve retornar um erro se o cheat não existir', async () => {
+    let personagem = criarPersonagem('Cleitin')
+    personagem = defineAspiracao(personagem.id, 'JOGOS')
+
+    const resultado = await aplicaCheat(personagem.id, '')
+
+    expect(resultado).toBeNull()
   })
 })

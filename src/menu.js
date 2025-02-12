@@ -39,7 +39,7 @@ export async function exibeMenuInicial() {
         
         if (personagemSelecionado === null) {
           menuPersonagemAtivo = false
-          break
+          continue
         }
         
         do {

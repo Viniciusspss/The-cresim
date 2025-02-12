@@ -76,4 +76,6 @@ describe('Teste de trabalho', () => {
     expect(personagemAtualizado.vida).toBe(vidaEsperada)
     expect(personagemAtualizado.higiene).toBe(higieneEsperada)
   })
+
+  it('Deve retornar salario correto se o a hiegene após o trabalho for menor que 4', async () => {})
 })
