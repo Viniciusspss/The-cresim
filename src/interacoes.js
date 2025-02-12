@@ -131,7 +131,7 @@ export async function relacionarPersonagens(personagemPrincipalId, personagemInt
     if (relacionamentoComP2Existe) {
         p1.relacionamentos[p2.nome] = {
             pontos: relacionamentoComP2Existe.pontos += interacao.pontos,
-            tipo: 'NEUTRO'
+            tipo: relacionamentoComP2Existe.tipo
         }
     } else {
         p1.relacionamentos[p2.nome] = {
