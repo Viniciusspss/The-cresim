@@ -7,6 +7,11 @@ describe('Teste de Personagem', () => {
     localStorage.setObject('personagens', [])
   })
 
+  afterAll(() => {
+    let localStorage = useLocalStorage()
+    localStorage.setObject('personagens', [])
+  })
+
   it('Deve conseguir criar um novo Cresim com nome, pontos de higiene e energia carregados e 1500 Cresceleons', async () =>  {
     const nomeEsperado = "Cresinho"
     const higieneEsperado = 28

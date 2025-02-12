@@ -7,6 +7,11 @@ describe('Relacionamento', () => {
         let localStorage = useLocalStorage()
         localStorage.setObject('personagens', [])
     })
+
+    afterAll(() => {
+        let localStorage = useLocalStorage()
+        localStorage.setObject('personagens', [])
+    })
     
     it('Deve evoluir o relacionamento de dois Cresims para AMIZADE', async () =>  {
         const personagemPrincipal = criarPersonagem("Joao")

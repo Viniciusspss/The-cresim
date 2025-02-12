@@ -8,6 +8,11 @@ describe('Itens', () => {
 		localStorage.setObject('personagens', [])
 	})
 
+	afterAll(() => {
+    let localStorage = useLocalStorage()
+    localStorage.setObject('personagens', [])
+  })
+
 	it('Deve conseguir comprar um item de habilidade', async () => {
 		const personagem = criarPersonagem("Cresinho")
 		const [item] = await buscarItens()

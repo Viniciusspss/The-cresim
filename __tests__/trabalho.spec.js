@@ -11,6 +11,11 @@ describe('Teste de trabalho', () => {
     localStorage.setObject('personagens', [])
   })
 
+  afterAll(() => {
+    let localStorage = useLocalStorage()
+    localStorage.setObject('personagens', [])
+  })
+
   it('Deve perder os pontos de energia ao trabalhar uma jornada padrão', async ()=> {
     const urlEmpregos = "https://emilyspecht.github.io/the-cresim/empregos.json"
     const trabalhos = await getDados(urlEmpregos)

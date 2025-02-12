@@ -8,6 +8,11 @@ describe('Testes de Dormir', () => {
     localStorage.setObject('personagens', [])
   })
 
+  afterAll(() => {
+    let localStorage = useLocalStorage()
+    localStorage.setObject('personagens', [])
+  })
+
   it('Deve conseguir dormir e receber seus pontos de energia', async ()=> {
     let personagem = criarPersonagem("Cresinho")
     personagem.energia = 10

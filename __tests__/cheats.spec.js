@@ -8,6 +8,11 @@ describe('Testes de Cheats', () => {
     let localStorage = useLocalStorage()
     localStorage.setObject('personagens', [])
   })
+
+  afterAll(() => {
+    let localStorage = useLocalStorage()
+    localStorage.setObject('personagens', [])
+  })
   
   it('Deve conseguir aplicar o cheat SORTENAVIDA e receber as recompensas', async () => {
     // FIXME: REFAZER POIS AGORA É APLICADO QND REALIZA O PROX TRABALHO

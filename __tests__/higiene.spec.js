@@ -7,6 +7,11 @@ describe('Testes de Higiene', () => {
       let localStorage = useLocalStorage()
       localStorage.setObject('personagens', [])
     })
+
+    afterAll(() => {
+      let localStorage = useLocalStorage()
+      localStorage.setObject('personagens', [])
+    })
     
     it('Deve descontar 10 Cresceleons ao tomar banho', async () => {
         const personagem = criarPersonagem('Cleitin')

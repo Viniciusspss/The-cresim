@@ -9,6 +9,11 @@ describe('Testes de Habilidade', () => {
     localStorage.setObject('personagens', [])
   })
 
+  afterAll(() => {
+    let localStorage = useLocalStorage()
+    localStorage.setObject('personagens', [])
+  })
+
   it('Deve conseguir atribuir uma aspiração ao Cresim', async () =>  {
     const aspiracaoEsperada = 'GASTRONOMIA'
 
