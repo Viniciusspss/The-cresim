@@ -318,7 +318,7 @@ export async function menuComprarItem(personagemId) {
 
     console.clear()
     console.log("============== COMPRAR ITEM ==============")
-    console.log(`${itens[itemSelecionado].nome} foi comprado com sucesso.`)
+    console.log(`${itens[itemSelecionado-1].nome} foi comprado com sucesso.`)
 
     await mensagemContinue()
   } catch (error) {
