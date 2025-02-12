@@ -18,7 +18,11 @@ export async function evoluirHabilidade(personagemId, item) {
   if (personagem.energia < 4) {
     throw new Error('Energia insuficiente para treinar')
   }
-
+  
+  if(personagem.higiene < 2){
+    throw new Error("Seu personagem precisa tomar banho para treinar!");
+  }
+  
   const habilidadeKey = item.categoria
   personagem.habilidades[habilidadeKey].pontos += item.pontos
 

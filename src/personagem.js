@@ -16,8 +16,8 @@ export function criarPersonagem(nome) {
     higiene: 28,
     cresceleons: 1500,
     aspiracao: null,
-    cheats: [],
     itens: [],
+    relacionamentos: {},
     habilidades: {
       'GASTRONOMIA': ATRIBUTOS_INICIAIS_HABILIDADES,
       'PINTURA': ATRIBUTOS_INICIAIS_HABILIDADES,
@@ -28,6 +28,28 @@ export function criarPersonagem(nome) {
   }
 
   const personagens = localStore.getObject('personagens') ?? []
+
+  personagem.relacionamentos = personagens.reduce((acc, p) => {
+    if (p.nome && p.nome !== nome) { 
+      acc[p.nome] = {};
+      acc[p.nome].pontos = 0;
+      acc[p.nome].tipo = "NEUTRO";
+    }
+    return acc;
+  }, {});
+  
+  personagens.forEach((p) => {
+    if (p.nome !== nome) {  
+      if (!p.relacionamentos[nome]) {
+        p.relacionamentos[nome] = {}; 
+      }
+
+      p.relacionamentos[nome].pontos = 0;
+      p.relacionamentos[nome].tipo = 'NEUTRO';    
+    }
+  });
+  
+
   localStore.setObject('personagens', [...personagens, personagem])
 
   return personagem

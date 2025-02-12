@@ -1,8 +1,14 @@
 import { defineAspiracao, evoluirHabilidade } from "../src/aspiracoes"
 import { atualizaPersonagem, criarPersonagem } from "../src/personagem"
 import { buscarItens } from "../src/itens"
+import { useLocalStorage } from "../src/services/local-storage/use-local-storage"
 
 describe('Aspiracoes', () => {
+  beforeEach(() => {
+    let localStorage = useLocalStorage()
+    localStorage.setObject('personagens', [])
+  })
+
   it('Deve conseguir atribuir uma aspiração ao Cresim', async () =>  {
     const aspiracaoEsperada = 'GASTRONOMIA'
 
@@ -32,8 +38,8 @@ describe('Aspiracoes', () => {
   })
 
   it('Deve conseguir concluir um ciclo de treino com habilidade que é sua aspiração e receber os pontos corretamente', async() => {
-    let personagem = criarPersonagem("Cresinho")
-    personagem = defineAspiracao(personagem.id, 'GASTRONOMIA')
+    const personagemCriado = criarPersonagem("Cresinho")
+    const personagem = defineAspiracao(personagemCriado.id, 'GASTRONOMIA')
 
     const [item] = await buscarItens()
     const personagemComHabilidadeEvoluida = await evoluirHabilidade(personagem.id, item)

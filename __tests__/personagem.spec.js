@@ -2,8 +2,14 @@ import { dormir, trabalhar } from "../src/interacoes"
 import { atualizaPersonagem, criarPersonagem } from "../src/personagem"
 import { defineAspiracao } from "../src/aspiracoes"
 import { getDados } from "../src/services/requisicoes/requisicoes"
+import { useLocalStorage } from "../src/services/local-storage/use-local-storage"
 
 describe('Personagem', () => {
+  beforeEach(() => {
+    let localStorage = useLocalStorage()
+    localStorage.setObject('personagens', [])
+  })
+
   it('Deve conseguir criar um novo Cresim com nome, pontos de higiene e energia carregados e 1500 Cresceleons', async () =>  {
     const nomeEsperado = "Cresinho"
     const higieneEsperado = 28
@@ -94,8 +100,7 @@ describe('Personagem', () => {
     personagem = defineAspiracao(personagem.id, "JOGOS")
     personagem.energia = 3
     await atualizaPersonagem(personagem)
-
-    const resultado = trabalhar(personagem.id, trabalhos, 1)
-    expect(resultado).toBeNull()
+    
+    expect(() => trabalhar(personagem.id, trabalhos, 1)).toThrow("Seu personagem está muito cansado e não pode trabalhar!")
   })
 })
