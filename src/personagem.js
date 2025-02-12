@@ -17,6 +17,7 @@ export function criarPersonagem(nome) {
     cresceleons: 1500,
     aspiracao: null,
     itens: [],
+    cheats: [],
     relacionamentos: {},
     habilidades: {
       'GASTRONOMIA': ATRIBUTOS_INICIAIS_HABILIDADES,

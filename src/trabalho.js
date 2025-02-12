@@ -40,7 +40,10 @@ export function trabalhar(personagemId, empregos, idEmprego){
   const ENERGIA_CRESCIM_DESCANSADO = ENERGIA_ATUAL - ENERGIA_PARA_DESCONTO
   const SALARIO_CRESCIM_DESCANSADO = ENERGIA_CRESCIM_DESCANSADO * CRESCELEON_PARA_CADA_PONTO_ENERGIA
 
-  const salarioTotal = RECALCULO_SALARIO_CRESCIM_CANSADO + SALARIO_CRESCIM_DESCANSADO
+  const bunusCheat = personagem.cheats.find(cheat => cheat.categoria === 'SALARIO')
+
+  let salarioTotal = RECALCULO_SALARIO_CRESCIM_CANSADO + SALARIO_CRESCIM_DESCANSADO
+  salarioTotal = bunusCheat ? salarioTotal * (1 + bunusCheat.valor/100) : salarioTotal
 
   if (personagem.energia <= 10) {
       const HIGIENE_GASTA_POR_ENERGIA = HIGIENE_GASTA/ENERGIA_GASTA
@@ -50,7 +53,7 @@ export function trabalhar(personagemId, empregos, idEmprego){
       personagem.energia -= ENERGIA_PARA_GASTAR
       personagem.vida -= TEMPO_PARA_TRABALHAR
       personagem.higiene -= higieneGasta
-  
+      personagem.cheats = personagem.cheats.filter(c => c.id !== bunusCheat.id)
       atualizaPersonagem(personagem)
       return personagem
   }
@@ -60,21 +63,25 @@ export function trabalhar(personagemId, empregos, idEmprego){
       const higieneGasta = HIGIENE_GASTA_POR_ENERGIA * ENERGIA_PARA_TRABALHAR
 
       const TEMPO_PARA_TRABALHAR_COM_ENERGIA_ONZE = ENERGIA_PARA_TRABALHAR * TEMPO_TRABALHO_POR_ENERGIA
-      const salarioAReceber = CRESCELEON_PARA_CADA_PONTO_ENERGIA * ENERGIA_PARA_TRABALHAR
+      let salarioAReceber = CRESCELEON_PARA_CADA_PONTO_ENERGIA * ENERGIA_PARA_TRABALHAR
+      salarioAReceber = bunusCheat ? salarioAReceber * (1 + bunusCheat.valor/100) : salarioAReceber
 
       personagem.energia = 2
       personagem.cresceleons += salarioAReceber
       personagem.vida -= TEMPO_PARA_TRABALHAR_COM_ENERGIA_ONZE
       personagem.higiene -= higieneGasta
+      personagem.cheats = personagem.cheats.filter(c => c.id !== bunusCheat.id)
 
       atualizaPersonagem(personagem)
       return personagem
   }
 
+  salarioDiario = bunusCheat ? salarioDiario * (1 + bunusCheat.valor/100) : salarioDiario
   personagem.energia -= ENERGIA_GASTA
   personagem.vida -= TEMPO_TRABALHO
   personagem.cresceleons += salarioDiario
   personagem.higiene -= HIGIENE_GASTA
+  personagem.cheats = personagem.cheats.filter(c => c.id !== bunusCheat.id)
 
   atualizaPersonagem(personagem)
   return personagem

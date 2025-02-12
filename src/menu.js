@@ -31,7 +31,11 @@ export async function exibeMenuInicial() {
 
     case 2:
       interagindo = true
-      let personagemSelecionado = await exibirPersonagens()
+
+      let personagemSelecionado
+      do {
+        personagemSelecionado = await exibirPersonagens()
+      } while(personagemSelecionado === null)
 
       while (interagindo) {
         interagindo = await exibirInteracoes(personagemSelecionado.id)
@@ -184,7 +188,11 @@ export async function exibirPersonagens() {
       return null
     }
 
-    const personagemSelecionado = parseInt(await useQuestion("Selecione a opção: "));
+    let personagemSelecionado = null
+    do {
+      personagemSelecionado = parseInt(await useQuestion("Selecione a opção: "))
+    } while(!personagemSelecionado || personagemSelecionado < 0 || personagemSelecionado > personagens.length)
+
     return personagens[personagemSelecionado - 1]
   } catch (error) {
     console.log(error.message)
