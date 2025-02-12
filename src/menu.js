@@ -15,11 +15,13 @@ export async function exibeMenuInicial() {
   console.log("============== MENU ==============")
   console.log("1. Criar novo personagem")
   console.log("2. Selecionar personagem")
+  console.log("----------------------------------")
   console.log("0. Sair do jogo")
   console.log("==================================")
 
   let opcao = 0
-  let interagindo = false
+  let menuPersonagemAtivo = true
+  
   do {
     opcao = parseInt(await question("Selecione uma opção:"))
   } while (opcao < 0 || opcao > 2)
@@ -30,11 +32,19 @@ export async function exibeMenuInicial() {
       break;
 
     case 2:
-      interagindo = true
-      let personagemSelecionado = await exibirPersonagens()
+      while(menuPersonagemAtivo) {
+        let interagindo = true
 
-      while (interagindo) {
-        interagindo = await exibirInteracoes(personagemSelecionado.id)
+        const personagemSelecionado = await exibirPersonagens()
+        
+        if (personagemSelecionado === null) {
+          menuPersonagemAtivo = false
+          break
+        }
+        
+        do {
+          interagindo = await exibirInteracoes(personagemSelecionado.id)
+        } while (interagindo)
       }
       break;
 
@@ -53,15 +63,16 @@ export async function exibirInteracoes(personagemId){
 
   console.clear()
   exibirPersonagemSelecionado(personagem.id)
-  console.log("============== ATIVIDADES ==============")
+  console.log("============ ATIVIDADES ============")
   console.log("1. Dormir")
   console.log("2. Trabalhar")
   console.log("3. Comprar item")
   console.log("4. Evoluir habilidade")
   console.log("5. Tomar banho")
   console.log("6. Relacionar")
-  console.log("0. Voltar para menu inicial")
-  console.log("========================================")
+  console.log("-----------------------------------")
+  console.log("0. Voltar para lista de personagens")
+  console.log("===================================")
 
   let opcao = 0
   do {
@@ -178,13 +189,22 @@ export async function exibirPersonagens() {
       personagens.forEach((personagem, i) => {
         console.log(`${i+1}. ${personagem.nome}`)
       });
+      console.log("-----------------------------------------")
+      console.log("0. voltar para menu principal")
       console.log("=========================================")
     }else{
       console.log("Você não possui nenhum personagem criado!")
       return null
     }
 
-    const personagemSelecionado = parseInt(await useQuestion("Selecione a opção: "));
+    let personagemSelecionado = null
+    do {
+      personagemSelecionado = parseInt(await useQuestion("Selecione a opção: "))
+      if (personagemSelecionado === 0) {
+        return null
+      }
+    } while(personagemSelecionado < 1 || personagemSelecionado > personagens.length)
+
     return personagens[personagemSelecionado - 1]
   } catch (error) {
     console.log(error.message)
@@ -230,16 +250,27 @@ export async function menuTrabalhar(personagemId) {
 
 // DORMIR
 export async function menuDormir(personagemId) {
-  const personagem = await buscaPersonagem(personagemId)
+  try {
+    const personagem = await buscaPersonagem(personagemId)
 
-  const tempo = parseInt(await question("\nDigite o tempo que deseja dormir (em segundos): ", personagem.id));
-  dormir(personagem.id, tempo)
-  console.log(`${personagem.nome} esta dormindo...`)
-
-  await new Promise(resolve => setTimeout(resolve, tempo * 1000));
-  console.log(`${personagem.nome} acordou!`)
-
-  await mensagemContinue()
+    console.clear()
+    console.log("================ DORMIR ================")
+    const tempo = parseInt(await question("Digite o tempo que deseja dormir (em segundos): ", personagem.id));
+    dormir(personagem.id, tempo)
+    console.clear()
+    console.log("================ DORMIR ================")
+    console.log(`${personagem.nome} esta dormindo...`)
+  
+    await new Promise(resolve => setTimeout(resolve, tempo * 1000));
+    console.clear()
+    console.log("================ DORMIR ================")
+    console.log(`${personagem.nome} acordou!`)
+  
+    await mensagemContinue()
+  } catch (error) {
+    console.log(error.message)
+    await mensagemContinue()
+  }
 }
 
 // BANHO
@@ -248,8 +279,12 @@ export async function menuTomarBanho(personagemId) {
     const personagem = buscaPersonagem(personagemId)
 
     tomarBanho(personagem.id)
+    console.clear()
+    console.log("================ BANHO ================")
     console.log(`${personagem.nome} está tomando banho...`)
     await new Promise(resolve => setTimeout(resolve, 3000))
+    console.clear()
+    console.log("================ BANHO ================")
     console.log(`${personagem.nome} terminou seu banho!`)
 
     await mensagemContinue()
@@ -263,6 +298,7 @@ export async function menuTomarBanho(personagemId) {
 export async function menuComprarItem(personagemId) {
   try {
     const itens = await buscarItens()
+    const personagem = buscaPersonagem(personagemId)
 
     console.clear()
     exibirPersonagemSelecionado(personagemId)
@@ -272,8 +308,15 @@ export async function menuComprarItem(personagemId) {
     for (const item of itens) {
       console.log(`${item.id}. ${item.nome} (${item.pontos}) - R$ ${item.preco} - ${item.categoria}`)
     }
+    console.log("------------------------------------------")
+    console.log("0. Voltar")
     console.log("==========================================")
 
+    if(personagem.cresceleons === 0) {
+      console.log("Você não possui dinheiro para comprar itens.")
+
+      return await mensagemContinue()
+    }
     let itemSelecionado = null
     do {
       itemSelecionado = parseInt(await question("Selecione uma opção para compra:", personagemId));
@@ -281,13 +324,15 @@ export async function menuComprarItem(personagemId) {
       if (itemSelecionado < 1 || itemSelecionado > itens.length) {
         console.log("Item inválido.")
       }
+
+      if (itemSelecionado === 0) return
     } while (!itemSelecionado || itemSelecionado < 0 || itemSelecionado > itens.length)
 
     await comprarItem(personagemId, itens[itemSelecionado - 1])
 
     console.clear()
     console.log("============== COMPRAR ITEM ==============")
-    console.log(`${itens[itemSelecionado].nome} foi comprado com sucesso.`)
+    console.log(`${itens[itemSelecionado-1].nome} foi comprado com sucesso.`)
 
     await mensagemContinue()
   } catch (error) {
@@ -305,13 +350,24 @@ export async function menuEvoluirHabilidade(personagemId) {
     exibirPersonagemSelecionado(personagemId)
     console.log("=============== MEUS ITENS ===============")
     let index = 1
+
+    if (!personagem.itens.length) {
+      console.log("Você não possui itens para evoluir habilidade.")
+      console.log("==========================================")
+      return await mensagemContinue()
+    }
+
     for (const item of personagem.itens) {
       console.log(`${index}. ${item.nome} (${item.pontos}) - ${item.categoria}`)
       index++
     }
+    console.log("------------------------------------------")
+    console.log("0. Voltar")
     console.log("==========================================")
     const itemSelecionado = parseInt(await question("Selecione um item para evoluir habilidade:", personagemId))
     await evoluirHabilidade(personagemId, personagem.itens[itemSelecionado - 1])
+
+    if (itemSelecionado === 0) return
     console.clear()
     console.log(`${personagem.nome} está evoluindo a habilidade...`)
     await new Promise(resolve => setTimeout(resolve, 8000))
@@ -502,8 +558,16 @@ export async function question(pergunta, personagemId) {
 
 export function exibirPersonagemSelecionado(personagemId) {
   const personagem = buscaPersonagem(personagemId)
+  const habilidade = personagem.habilidades[personagem.aspiracao]
 
-  console.log(`Personagem: ${personagem.nome} | Energia: ${personagem.energia} | Vida: ${personagem.vida} | Habilidade: ${personagem.aspiracao}\n`)
+  const nome = `😀 ${personagem.nome} (♥️ ${personagem.vida})`
+  const energIcone = personagem.energia > 10 ? '🔋' : '🪫'
+  const energia = `${energIcone} ${Number(personagem.energia).toFixed(2)}`
+  const aspiracao = `💼 ${personagem.aspiracao}`
+  const cresceleons = `💰 ${personagem.cresceleons}`
+  const nivelHabilidade = `${habilidade.nivel} (${habilidade.pontos})`
+
+  console.log(`${nome} | ${energia} | ${cresceleons} | ${aspiracao} - ${nivelHabilidade}`)
 }
 
 export async function mensagemContinue() {

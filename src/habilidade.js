@@ -20,7 +20,7 @@ export async function evoluirHabilidade(personagemId, item) {
   }
   
   if(personagem.higiene < 2){
-    throw new Error("Seu personagem precisa tomar banho para treinar!");
+    throw new Error("Seu personagem precisa tomar banho para treinar!")
   }
   
   const habilidadeKey = item.categoria

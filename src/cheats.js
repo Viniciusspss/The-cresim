@@ -15,7 +15,8 @@ export async function aplicaCheat(personagemId, codigo) {
     }
 
     if(cheat.codigo === 'SORTENAVIDA') {
-      personagem.cresceleons += personagem.cresceleons * (cheat.valor / 100)
+      // personagem.cresceleons += personagem.cresceleons * (cheat.valor / 100)
+      personagem.cheats.push({ ...cheat, id: Date.now() })
     }
 
     if (cheat.codigo === 'DEITADONAREDE') {
@@ -25,6 +26,14 @@ export async function aplicaCheat(personagemId, codigo) {
     if (cheat.codigo === 'JUNIM') {
       const aspiracao = personagem.aspiracao
       personagem.habilidades[aspiracao].pontos += cheat.valor
+
+      if (personagem.habilidades[aspiracao].pontos >= 17) {
+        personagem.habilidades[aspiracao].nivel = 'PLENO'
+      }
+  
+      if (personagem.habilidades[aspiracao].pontos > 26) {
+        personagem.habilidades[aspiracao].nivel = 'SENIOR'
+      }
     }
 
     if (cheat.codigo === 'CAROLINAS') {

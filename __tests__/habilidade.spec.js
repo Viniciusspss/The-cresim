@@ -9,6 +9,11 @@ describe('Testes de Habilidade', () => {
     localStorage.setObject('personagens', [])
   })
 
+  afterAll(() => {
+    let localStorage = useLocalStorage()
+    localStorage.setObject('personagens', [])
+  })
+
   it('Deve conseguir atribuir uma aspiração ao Cresim', async () =>  {
     const aspiracaoEsperada = 'GASTRONOMIA'
 
@@ -117,7 +122,30 @@ describe('Testes de Habilidade', () => {
     })
   })
 
-  it('Deve lançar um erro ao tentar treinar sem higiene', async () => {})
+  it('Deve lançar um erro ao tentar treinar sem higiene', async () => {
+    const [item] = await buscarItens()
+    let personagem = criarPersonagem("Cresinho")
+    personagem.higiene = 1
 
-  it('Deve evoluir nível para SÊNIOR ao atingir mais de 26 pontos', async () => {})
+    await atualizaPersonagem(personagem)
+
+    await expect(() => evoluirHabilidade(personagem.id, item)).rejects.toThrow('Seu personagem precisa tomar banho para treinar!')
+
+  })
+
+  it('Deve evoluir nível para SÊNIOR ao atingir mais de 26 pontos', async () => {
+    const [item] = await buscarItens()
+    let personagem = criarPersonagem("Cresinho")
+    personagem.habilidades['GASTRONOMIA'].pontos = 25
+
+    await atualizaPersonagem(personagem)
+
+    personagem = defineAspiracao(personagem.id, 'GASTRONOMIA')
+    const personagemComNivelHabilidadeEvoluido = await evoluirHabilidade(personagem.id, item)
+
+    const NivelHabilidadeEsperado = "SENIOR"
+
+    expect(personagemComNivelHabilidadeEvoluido.habilidades['GASTRONOMIA'].nivel).toBe(NivelHabilidadeEsperado)
+
+  })
 })

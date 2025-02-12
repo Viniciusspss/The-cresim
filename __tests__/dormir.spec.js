@@ -8,6 +8,11 @@ describe('Testes de Dormir', () => {
     localStorage.setObject('personagens', [])
   })
 
+  afterAll(() => {
+    let localStorage = useLocalStorage()
+    localStorage.setObject('personagens', [])
+  })
+
   it('Deve conseguir dormir e receber seus pontos de energia', async ()=> {
     let personagem = criarPersonagem("Cresinho")
     personagem.energia = 10
@@ -18,5 +23,10 @@ describe('Testes de Dormir', () => {
     expect(personagemAtualizado.energia).toBe(20)
   })
 
-  it('Deve retornar um erro se o tempo de sono for menor que 0', async () => {})
+  it('Deve retornar um erro se o tempo de sono for menor que 0', async () => {
+
+    let personagem = criarPersonagem("Cresinho")
+ 
+    expect(()=>dormir(personagem.id, -1)).toThrow("Insira um tempo válido.")
+  })
 })

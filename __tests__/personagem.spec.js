@@ -1,8 +1,13 @@
-import { atualizaPersonagem, criarPersonagem } from "../src/personagem"
+import { atualizaPersonagem, buscaPersonagem, criarPersonagem } from "../src/personagem"
 import { useLocalStorage } from "../src/services/local-storage/use-local-storage"
 
 describe('Teste de Personagem', () => {
   beforeEach(() => {
+    let localStorage = useLocalStorage()
+    localStorage.setObject('personagens', [])
+  })
+
+  afterAll(() => {
     let localStorage = useLocalStorage()
     localStorage.setObject('personagens', [])
   })
@@ -42,5 +47,9 @@ describe('Teste de Personagem', () => {
     expect(personagemAtualizado.energia).toBe(0)
   })
 
-  it('Deve lançar erro se o personagem não for encontrado', async () => {})
+  it('Deve lançar erro se o personagem não for encontrado', async () => {
+    const idInexistente = 1
+
+    expect(()=> {buscaPersonagem(idInexistente)}).toThrow('Personagem não encontrado')
+  })
 })
