@@ -1,8 +1,14 @@
 import { defineAspiracao, evoluirHabilidade } from "../src/aspiracoes"
 import { criarPersonagem } from "../src/personagem"
 import { buscarItens } from "../src/itens"
+import { useLocalStorage } from "../src/services/local-storage/use-local-storage"
 
 describe('Aspiracoes', () => {
+  beforeEach(() => {
+    const localStorage = useLocalStorage()
+    localStorage.setObject('personagens', [])
+  })
+
   it('Deve conseguir atribuir uma aspiração ao Cresim', async () =>  {
     const aspiracaoEsperada = 'GASTRONOMIA'
 
