@@ -169,7 +169,7 @@ export async function exibeMenuAspiracoes() {
      return  "JARDINAGEM";
 
     case 5:
-     return  "MÚSICA";
+     return  "MUSICA";
 
     default:
       console.log("Opção inválida. Escolha um número de 1 a 5.");
