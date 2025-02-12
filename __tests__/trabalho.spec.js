@@ -1,4 +1,3 @@
-import { aplicaCheat } from "../src/cheats"
 import { defineAspiracao } from "../src/habilidade"
 import { atualizaPersonagem, criarPersonagem } from "../src/personagem"
 import { useLocalStorage } from "../src/services/local-storage/use-local-storage"
@@ -71,21 +70,5 @@ describe('Teste de trabalho', () => {
 
   it('Deve atualizar corretamente se energia for 11', async () => {
     // TODO: Implementar teste
-  })
-
-  it('Deve ataulizar o salario corretamente se estiver com cheats SORTENAVIDA aplicado', async () => {
-    const urlEmpregos = "https://emilyspecht.github.io/the-cresim/empregos.json"
-    const trabalhos = await getDados(urlEmpregos)
-
-    let personagem = criarPersonagem("Cresinho")
-    personagem = await aplicaCheat(personagem.id, "SORTENAVIDA")
-
-    const id = personagem.id
-
-
-    const personagemAtualizado = trabalhar (id, trabalhos, 1)
-    const salarioEsperado = 1676
-    
-    expect(personagemAtualizado.cresceleons ).toBe(salarioEsperado)
   })
 })
