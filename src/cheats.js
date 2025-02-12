@@ -1,5 +1,6 @@
 import { getDados } from './services/requisicoes/requisicoes'
 import { buscaPersonagem, atualizaPersonagem } from './personagem'
+import { mensagemContinue } from './menu'
 
 export async function aplicaCheat(personagemId, codigo) {
   try {
@@ -15,7 +16,6 @@ export async function aplicaCheat(personagemId, codigo) {
     }
 
     if(cheat.codigo === 'SORTENAVIDA') {
-      // personagem.cresceleons += personagem.cresceleons * (cheat.valor / 100)
       personagem.cheats.push({ ...cheat, id: Date.now() })
     }
 

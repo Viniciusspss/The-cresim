@@ -183,19 +183,20 @@ export async function exibirPersonagens() {
     let personagens = buscaPersonagens()
     personagens = personagens.filter(personagem => personagem.vida > 0)
 
+    console.clear()
+    console.log("============== PERSONAGENS ==============")
     if (personagens.length > 0) {
       console.clear()
-      console.log("============== PERSONAGENS ==============")
       personagens.forEach((personagem, i) => {
         console.log(`${i+1}. ${personagem.nome}`)
       });
       console.log("-----------------------------------------")
-      console.log("0. voltar para menu principal")
-      console.log("=========================================")
-    }else{
+    } else {
       console.log("Você não possui nenhum personagem criado!")
-      return null
+      console.log("-----------------------------------------")
     }
+    console.log("0. voltar para menu principal")
+    console.log("=========================================")
 
     let personagemSelecionado = null
     do {
@@ -548,7 +549,19 @@ export async function question(pergunta, personagemId) {
 
     if (resultado) {
       valorEhCheat = true
-      console.log('Um cheat foi aplicado')
+      console.log('\nUm cheat foi aplicado')
+
+      if (resultado.vida === 0) {
+        console.clear()
+        console.log("================== NOTA DE PESAR =================")
+        console.log("A comunidade do Cresim vem por meio deste informar")
+        console.log(`o falecimento de ${resultado.nome} por motivos de`)
+        console.log(`saúde, o mesmo contraiu sinusite.`)
+        console.log("==================================================")
+
+        await mensagemContinue()
+        exibirPersonagens()
+      }
     } else {
       valorEhCheat = false
     }
@@ -571,7 +584,10 @@ export function exibirPersonagemSelecionado(personagemId) {
   console.log(`${nome} | ${energia} | ${nivelHigiene} | ${cresceleons} | ${aspiracao} - ${nivelHabilidade}`)
 }
 
-export async function mensagemContinue() {
+export async function mensagemContinue(limparConsole = true) {
   await useQuestion("\nPressione ENTER para continuar...")
-  console.clear()
+
+  if(limparConsole) {
+    console.clear()
+  }
 }
