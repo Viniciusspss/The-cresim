@@ -1,10 +1,10 @@
 import { useQuestion } from './src/services/question/use-question.js';
-import { exibeMenuInicial, exibirEmpregos, exibirPersonagens, exibirInteracoes } from './src/services/mensagens/menus.js'
+import { exibeMenuInicial, exibirEmpregos, exibirPersonagens, exibirInteracoes, exibirOpcoesDeRelacionamento, exibirMenuDeRelacionamento, exibirMenuPorNivel } from './src/services/mensagens/menus.js'
 import { menuCriarPersoangem } from './src/services/menus/menu-inicial.js'
 
-import { dormir, tomarBanho, trabalhar } from './src/interacoes.js';
-import { getDados } from './src/services/requisicoes/requisicoes.js';
+import { dormir, tomarBanho, relacionarPersonagens, trabalhar } from './src/interacoes.js';
 
+import { getDados } from './src/services/requisicoes/requisicoes.js';
 import { buscarItens, comprarItem, listarItens } from './src/itens.js';
 import { evoluirHabilidade } from './src/aspiracoes.js';
 import { question } from './src/question'
@@ -31,7 +31,7 @@ const main = async () => {
           break; 
         }
 
-        console.clear()
+        console.clear()        
 
         const interacaoSelecionada = await exibirInteracoes(personagemSelecionado)
 
@@ -97,8 +97,53 @@ const main = async () => {
             console.log(`${personagemSelecionado.nome} terminou seu banho!`)
 
             break;
+          
+          case 5:
+            console.clear() 
+            const personagemEscolhido = await exibirOpcoesDeRelacionamento(personagemSelecionado)
+            console.clear()                     
+
+            const opcao = await exibirMenuDeRelacionamento(personagemSelecionado, personagemEscolhido)
+            const urlInteracoes = "https://emilyspecht.github.io/the-cresim/interacoes.json"
+            const listaInteracoes = await getDados(urlInteracoes)
+            let interacao = 0
+
+            if(opcao === "INIMIZADE") {
+              interacao = await exibirMenuPorNivel(listaInteracoes.INIMIZADE, "INIMIZADE 💔", personagemSelecionado, personagemEscolhido)
+            }
+            else if(opcao === "NEUTRO") {
+              interacao = await exibirMenuPorNivel(listaInteracoes.NEUTRO, "NEUTRO 🌱", personagemSelecionado, personagemEscolhido)
+            }
+            else if(opcao === "AMIZADE") {
+              interacao = await exibirMenuPorNivel(listaInteracoes.AMIZADE, "AMIZADE 🌱", personagemSelecionado, personagemEscolhido)
+            }
+            else {
+              interacao = await exibirMenuPorNivel(listaInteracoes.AMOR, "AMOR 🌱", personagemSelecionado, personagemEscolhido)
+            }
+
+            console.clear()
+
+            const energiaFabricyo = interacao.energia  
+            const energiaAna = Math.ceil(interacao.energia / 2)
+            const vidaPerdida = interacao.energia * 2000;      
+            const [personagemPrincipal, personagemInteracao] = await relacionarPersonagens(personagemSelecionado.id, personagemEscolhido.id, interacao)
+
+            console.log(`${personagemPrincipal.nome} fez a ação de '${interacao.interacao}' com ${personagemInteracao.nome}\n`);
+            console.log(`${personagemPrincipal.nome}:`);
+            console.log(`   Energia perdida: ${energiaFabricyo}`);
+            console.log(`   Vida perdida: ${vidaPerdida}`);
+            console.log(`   Pontos acumulados: ${interacao.pontos}\n\n`);
+            
+            console.log(`${personagemInteracao.nome}:`);
+            console.log(`   Energia perdida: ${energiaAna}`);
+            console.log(`   Vida perdida: ${vidaPerdida}`);
+            console.log(`   Pontos acumulados: ${interacao.pontos}\n`);       
+
+            await useQuestion("\nPressione ENTER para continuar...")
+            console.clear()
+            break;
         
-          default:
+          default:            
             break;
         }
         break;

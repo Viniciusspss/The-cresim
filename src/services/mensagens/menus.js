@@ -1,5 +1,6 @@
 import { question } from '../../question'
 import { buscaPersonagens } from '../../personagem.js'
+import { useQuestion } from '../question/use-question.js'
 
 export async function exibeMenuInicial() {
   console.log("\n============== MENU ==============")
@@ -44,7 +45,7 @@ export async function exibeMenuAspiracoes() {
 }
 
 export async function exibirPersonagens(){
-  const personagens = buscaPersonagens()
+  const personagens = buscaPersonagens()  
 
   if (personagens.length > 0) {
     console.log("\n============== PERSONAGENS ==============")
@@ -79,10 +80,10 @@ export async function exibirInteracoes(personagemSelecionado){
   console.log("2. Trabalhar")
   console.log("3. Comprar item")
   console.log("4. Tomar banho")
+  console.log("5. Relacionamento")
   console.log("==========================================")
 
   return parseInt(await question("\nSelecione a opção: ", personagemSelecionado.id));
-
 }
 
 export async function exibirEmpregos(personagemSelecionado, empregos) {
@@ -95,4 +96,117 @@ export async function exibirEmpregos(personagemSelecionado, empregos) {
   console.log("==========================================")
 
   return parseInt(await question("\nSelecione a opção: ", personagemSelecionado.id));
+}
+
+export async function exibirOpcoesDeRelacionamento(personagemSelecionado) {
+  const personagens = buscaPersonagens()
+  let contador = 1;  
+  let personagensDisponiveis = []
+
+  if (personagens.length > 0) {
+    console.log("\n============== PERSONAGENS DISPONÍVEIS ==============")
+    personagens.forEach((personagem) => {
+      if (personagem.nome !== personagemSelecionado.nome) {
+        console.log(`${contador}. ${personagem.nome}`)
+        personagensDisponiveis.push(personagem) 
+        contador++
+      }
+    });
+    console.log("=========================================================")
+  }
+  else {
+    console.log("Não há personagens para se relacionar.") 
+    return null   
+  }
+
+  try {
+    const opcao = parseInt(await useQuestion("\nSelecione um personagem para se relacionar: "));
+
+    if (isNaN(opcao) || opcao < 1 || opcao >= contador) {
+      console.log("\nEsse personagem não existe")
+      return null
+    }
+
+    return personagensDisponiveis[opcao - 1]
+  } 
+  catch (error) {
+    console.log("\nErro ao selecionar o personagem.")
+    return null
+  }  
+}
+
+export async function exibirMenuDeRelacionamento(personagemSelecionado, personagemRelacao) {
+  const pontosRelacionamento = personagemSelecionado.relacionamentos[personagemRelacao.nome].pontos;
+  let relacionamentoDescricao = `Relacionamento com ${personagemRelacao.nome}: `;  
+
+  let opcoes = [];
+
+  if (pontosRelacionamento < 0) {
+    relacionamentoDescricao += "INIMIZADE 💔\n";    
+    opcoes.push("INIMIZADE")
+    opcoes.push("NEUTRO");
+  } 
+  else if(pontosRelacionamento <= 10) {
+    relacionamentoDescricao += "NEUTRO 🌱\n";    
+    opcoes.push("NEUTRO");
+  }
+  else if(pontosRelacionamento <= 25) {
+    relacionamentoDescricao += "AMIZADE 🍻\n";
+    opcoes.push("NEUTRO");
+    opcoes.push("AMIZADE");
+  }
+  else if(pontosRelacionamento > 25) {
+    relacionamentoDescricao += "AMOR ❤️‍🔥 \n";
+    opcoes.push("NEUTRO");
+    opcoes.push("AMIZADE");
+    opcoes.push("AMOR");
+  }
+
+  console.log(`Personagem: ${personagemSelecionado.nome} | Energia: ${personagemSelecionado.energia} | Vida: ${personagemSelecionado.vida}`)
+  console.log(`Personagem: ${personagemRelacao.nome} | Energia: ${personagemRelacao.energia} | Vida: ${personagemRelacao.vida}\n`)
+  console.log(relacionamentoDescricao);
+  console.log("========== AÇÕES DE RELACIONAMENTO ==========");
+  
+  opcoes.forEach((opcao, index) => {
+    console.log(`${index + 1}. ${opcao}`);
+  });
+  
+  console.log("=============================================\n");
+
+  let opcao = 0
+  do {
+    opcao = parseInt(await useQuestion("\nSelecione a opção: "));
+
+    if(opcao < 1 || opcao > opcoes.length) {
+      console.log("Opção inválida")
+    }
+  } while(opcao < 1 || opcao > opcoes.length)
+  
+  return opcoes[opcao - 1];
+}
+
+export async function exibirMenuPorNivel(nivelMenu, nomeNivel, personagemSelecionado, personagemRelacao) {
+  const menu = nivelMenu  
+  let opcao = 0
+  
+  console.clear()
+
+  console.log(`Personagem: ${personagemSelecionado.nome} | Energia: ${personagemSelecionado.energia} | Vida: ${personagemSelecionado.vida}`)
+  console.log(`Personagem: ${personagemRelacao.nome} | Energia: ${personagemRelacao.energia} | Vida: ${personagemRelacao.vida}\n`)
+
+  do {    
+    console.log(`Menu de relacionamento ${nomeNivel}\n`)
+    console.log("========== AÇÕES RELACIONAMENTO ==========");
+    menu.forEach((itemMenu) => {
+      console.log(`${itemMenu.id}. ${itemMenu.interacao}`)
+    })
+    console.log("===============================================\n");
+    opcao = parseInt(await useQuestion("\nSelecione a opção: "));
+
+    if(opcao < 1 || opcao > menu.length) {
+      console.log("\nOpção inválida.")
+    }
+  } while (opcao < 1 || opcao > menu.length)
+
+    return nivelMenu[opcao - 1]
 }
