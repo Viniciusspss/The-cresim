@@ -279,8 +279,12 @@ export async function menuTomarBanho(personagemId) {
     const personagem = buscaPersonagem(personagemId)
 
     tomarBanho(personagem.id)
+    console.clear()
+    console.log("================ BANHO ================")
     console.log(`${personagem.nome} está tomando banho...`)
     await new Promise(resolve => setTimeout(resolve, 3000))
+    console.clear()
+    console.log("================ BANHO ================")
     console.log(`${personagem.nome} terminou seu banho!`)
 
     await mensagemContinue()
