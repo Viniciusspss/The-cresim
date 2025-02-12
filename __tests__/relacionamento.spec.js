@@ -1,4 +1,4 @@
-import { relacionarPersonagens } from "../src/interacoes"
+import { relacionarPersonagens } from "../src/relacionamento"
 import { criarPersonagem } from "../src/personagem";
 import { useLocalStorage } from "../src/services/local-storage/use-local-storage";
 

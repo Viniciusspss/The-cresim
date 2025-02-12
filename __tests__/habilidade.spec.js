@@ -1,9 +1,9 @@
-import { defineAspiracao, evoluirHabilidade } from "../src/aspiracoes"
+import { defineAspiracao, evoluirHabilidade } from "../src/habilidade"
 import { atualizaPersonagem, criarPersonagem } from "../src/personagem"
 import { buscarItens } from "../src/itens"
 import { useLocalStorage } from "../src/services/local-storage/use-local-storage"
 
-describe('Aspiracoes', () => {
+describe('Testes de Habilidade', () => {
   beforeEach(() => {
     let localStorage = useLocalStorage()
     localStorage.setObject('personagens', [])
@@ -116,4 +116,8 @@ describe('Aspiracoes', () => {
       }
     })
   })
+
+  it('Deve lançar um erro ao tentar treinar sem higiene', async () => {})
+
+  it('Deve evoluir nível para SÊNIOR ao atingir mais de 26 pontos', async () => {})
 })

@@ -1,9 +1,9 @@
 import { atualizaPersonagem, criarPersonagem } from "../src/personagem"
-import { defineAspiracao } from '../src/aspiracoes'
+import { defineAspiracao } from '../src/habilidade'
 import { aplicaCheat } from "../src/cheats"
 import { useLocalStorage } from "../src/services/local-storage/use-local-storage"
 
-describe('cheats', () => {
+describe('Testes de Cheats', () => {
   beforeEach(() => {
     let localStorage = useLocalStorage()
     localStorage.setObject('personagens', [])

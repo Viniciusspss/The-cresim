@@ -1,10 +1,32 @@
-import { defineAspiracao, evoluirHabilidade } from "./aspiracoes"
+import { useQuestion } from "./services/question/use-question"
+import { question } from "./question"
+import { defineAspiracao, evoluirHabilidade } from "./habilidade"
 import { buscarItens, comprarItem } from "./itens"
 import { buscaPersonagem, buscaPersonagens, criarPersonagem } from "./personagem"
-import { question } from "./question"
-import { useQuestion } from "./services/question/use-question"
-import { dormir, relacionarPersonagens, tomarBanho, trabalhar } from './interacoes'
+import { dormir } from './dormir'
+import { relacionarPersonagens } from './relacionamento'
+import { tomarBanho } from "./banho"
+import { trabalhar } from "./trabalhar"
 import { getDados } from "./services/requisicoes/requisicoes"
+
+export async function question(pergunta, personagemId) {
+  let valorEhCheat = false
+  let value
+  do {
+    value = await useQuestion(pergunta)
+    if (!personagemId) {
+      break
+    }
+    const resultado = await aplicaCheat(personagemId, value)
+    if (resultado) {
+      valorEhCheat = true
+      console.log('Um cheat foi aplicado')
+    } else {
+      valorEhCheat = false
+    }
+  } while(valorEhCheat)
+  return value
+}
 
 export async function menuCriarPersoangem() {
   const nome = await useQuestion("\nQual o nome do personagem? ");

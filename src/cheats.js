@@ -8,27 +8,26 @@ export async function aplicaCheat(personagemId, codigo) {
   const cheats = await getDados(URL)
 
   const cheat = cheats.find(c => c.codigo === codigo)
-  
-  if (!cheat) return null
 
-  if(cheat.codigo === 'SORTENAVIDA') {
+
+  if(cheat && cheat.codigo === 'SORTENAVIDA') {
     personagem.cresceleons += personagem.cresceleons * (cheat.valor / 100)
   }
 
-  if (cheat.codigo === 'DEITADONAREDE') {
+  if (cheat && cheat.codigo === 'DEITADONAREDE') {
     personagem.energia += cheat.valor
   }
 
-  if (cheat.codigo === 'JUNIM') {
+  if (cheat && cheat.codigo === 'JUNIM') {
     const aspiracao = personagem.aspiracao
     personagem.habilidades[aspiracao].pontos += cheat.valor
   }
 
-  if (cheat.codigo === 'CAROLINAS') {
+  if (cheat && cheat.codigo === 'CAROLINAS') {
     personagem.vida += cheat.valor
   }
 
-  if (cheat.codigo === 'SINUSITE') {
+  if (cheat && cheat.codigo === 'SINUSITE') {
     personagem.vida = cheat.valor
   }
 
