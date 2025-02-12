@@ -79,7 +79,7 @@ export function atualizaPersonagem(personagemAtualizado) {
     personagemAtualizado.energia = 32
   }
 
-  const personagens = buscaPersonagens(personagemAtualizado.id)
+  const personagens = buscaPersonagens()
 
   const personagensAtualizado = personagens.map(personagem => personagem.id === personagemAtualizado.id ? personagemAtualizado : personagem)
   localStore.setObject('personagens', personagensAtualizado)

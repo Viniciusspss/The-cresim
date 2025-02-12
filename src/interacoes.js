@@ -29,7 +29,7 @@ export function trabalhar (personagemId, empregos, idEmprego){
     const emprego = empregos.find(emp => emp.id === idEmprego)
 
     const nivelHabilidade = personagem.habilidades[emprego.categoria].nivel
-    const salarioDiario = emprego.salario.find(s => s.nivel === nivelHabilidade).valor
+    let salarioDiario = emprego.salario.find(s => s.nivel === nivelHabilidade).valor
 
     if(personagem.energia <= 4){
         throw new Error("Seu personagem está muito cansado e não pode trabalhar!")
