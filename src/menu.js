@@ -15,11 +15,13 @@ export async function exibeMenuInicial() {
   console.log("============== MENU ==============")
   console.log("1. Criar novo personagem")
   console.log("2. Selecionar personagem")
+  console.log("----------------------------------")
   console.log("0. Sair do jogo")
   console.log("==================================")
 
   let opcao = 0
-  let interagindo = false
+  let menuPersonagemAtivo = true
+  
   do {
     opcao = parseInt(await question("Selecione uma opção:"))
   } while (opcao < 0 || opcao > 2)
@@ -30,15 +32,19 @@ export async function exibeMenuInicial() {
       break;
 
     case 2:
-      interagindo = true
+      while(menuPersonagemAtivo) {
+        let interagindo = true
 
-      let personagemSelecionado
-      do {
-        personagemSelecionado = await exibirPersonagens()
-      } while(personagemSelecionado === null)
-
-      while (interagindo) {
-        interagindo = await exibirInteracoes(personagemSelecionado.id)
+        const personagemSelecionado = await exibirPersonagens()
+        
+        if (personagemSelecionado === null) {
+          menuPersonagemAtivo = false
+          break
+        }
+        
+        do {
+          interagindo = await exibirInteracoes(personagemSelecionado.id)
+        } while (interagindo)
       }
       break;
 
@@ -57,15 +63,16 @@ export async function exibirInteracoes(personagemId){
 
   console.clear()
   exibirPersonagemSelecionado(personagem.id)
-  console.log("============== ATIVIDADES ==============")
+  console.log("============ ATIVIDADES ============")
   console.log("1. Dormir")
   console.log("2. Trabalhar")
   console.log("3. Comprar item")
   console.log("4. Evoluir habilidade")
   console.log("5. Tomar banho")
   console.log("6. Relacionar")
-  console.log("0. Voltar para menu inicial")
-  console.log("========================================")
+  console.log("-----------------------------------")
+  console.log("0. Voltar para lista de personagens")
+  console.log("===================================")
 
   let opcao = 0
   do {
@@ -182,6 +189,8 @@ export async function exibirPersonagens() {
       personagens.forEach((personagem, i) => {
         console.log(`${i+1}. ${personagem.nome}`)
       });
+      console.log("-----------------------------------------")
+      console.log("0. voltar para menu principal")
       console.log("=========================================")
     }else{
       console.log("Você não possui nenhum personagem criado!")
@@ -191,7 +200,10 @@ export async function exibirPersonagens() {
     let personagemSelecionado = null
     do {
       personagemSelecionado = parseInt(await useQuestion("Selecione a opção: "))
-    } while(!personagemSelecionado || personagemSelecionado < 0 || personagemSelecionado > personagens.length)
+      if (personagemSelecionado === 0) {
+        return null
+      }
+    } while(personagemSelecionado < 1 || personagemSelecionado > personagens.length)
 
     return personagens[personagemSelecionado - 1]
   } catch (error) {
