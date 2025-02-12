@@ -294,6 +294,7 @@ export async function menuTomarBanho(personagemId) {
 export async function menuComprarItem(personagemId) {
   try {
     const itens = await buscarItens()
+    const personagem = buscaPersonagem(personagemId)
 
     console.clear()
     exibirPersonagemSelecionado(personagemId)
@@ -303,8 +304,15 @@ export async function menuComprarItem(personagemId) {
     for (const item of itens) {
       console.log(`${item.id}. ${item.nome} (${item.pontos}) - R$ ${item.preco} - ${item.categoria}`)
     }
+    console.log("------------------------------------------")
+    console.log("0. Voltar")
     console.log("==========================================")
 
+    if(personagem.cresceleons === 0) {
+      console.log("Você não possui dinheiro para comprar itens.")
+
+      return await mensagemContinue()
+    }
     let itemSelecionado = null
     do {
       itemSelecionado = parseInt(await question("Selecione uma opção para compra:", personagemId));
@@ -312,6 +320,8 @@ export async function menuComprarItem(personagemId) {
       if (itemSelecionado < 1 || itemSelecionado > itens.length) {
         console.log("Item inválido.")
       }
+
+      if (itemSelecionado === 0) return
     } while (!itemSelecionado || itemSelecionado < 0 || itemSelecionado > itens.length)
 
     await comprarItem(personagemId, itens[itemSelecionado - 1])
@@ -336,13 +346,24 @@ export async function menuEvoluirHabilidade(personagemId) {
     exibirPersonagemSelecionado(personagemId)
     console.log("=============== MEUS ITENS ===============")
     let index = 1
+
+    if (!personagem.itens.length) {
+      console.log("Você não possui itens para evoluir habilidade.")
+      console.log("==========================================")
+      return await mensagemContinue()
+    }
+
     for (const item of personagem.itens) {
       console.log(`${index}. ${item.nome} (${item.pontos}) - ${item.categoria}`)
       index++
     }
+    console.log("------------------------------------------")
+    console.log("0. Voltar")
     console.log("==========================================")
     const itemSelecionado = parseInt(await question("Selecione um item para evoluir habilidade:", personagemId))
     await evoluirHabilidade(personagemId, personagem.itens[itemSelecionado - 1])
+
+    if (itemSelecionado === 0) return
     console.clear()
     console.log(`${personagem.nome} está evoluindo a habilidade...`)
     await new Promise(resolve => setTimeout(resolve, 8000))
