@@ -539,9 +539,10 @@ export function exibirPersonagemSelecionado(personagemId) {
   const energIcone = personagem.energia > 10 ? '🔋' : '🪫'
   const energia = `${energIcone} ${Number(personagem.energia).toFixed(2)}`
   const aspiracao = `💼 ${personagem.aspiracao}`
+  const cresceleons = `💰 ${personagem.cresceleons}`
   const nivelHabilidade = `${habilidade.nivel} (${habilidade.pontos})`
 
-  console.log(`${nome} | ${energia} | ${aspiracao} - ${nivelHabilidade}`)
+  console.log(`${nome} | ${energia} | ${cresceleons} | ${aspiracao} - ${nivelHabilidade}`)
 }
 
 export async function mensagemContinue() {
