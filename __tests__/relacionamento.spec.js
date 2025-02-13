@@ -1,5 +1,5 @@
 import { relacionarPersonagens } from "../src/relacionamento"
-import { criarPersonagem } from "../src/personagem";
+import { atualizaPersonagem, criarPersonagem } from "../src/personagem";
 import { useLocalStorage } from "../src/services/local-storage/use-local-storage";
 
 describe('Relacionamento', () => {
@@ -73,5 +73,32 @@ describe('Relacionamento', () => {
 
         expect(energiaJoao).toBe(energiaEsperadaJoao)
         expect(energiaAna).toBe(energiaEsperadaMaria)
+    })
+
+    it('Deve adicionar o relacionamento caso ainda não tenham', async () =>  {
+        const personagemPrincipal = criarPersonagem("Joao")
+        const personagemInteracao = criarPersonagem("Ana")
+
+        personagemPrincipal.relacionamentos = {}
+        personagemInteracao.relacionamentos = {}
+
+        atualizaPersonagem(personagemPrincipal)
+        atualizaPersonagem(personagemInteracao)
+
+        const interacao = {
+            id: 3,
+            pontos: 6,
+            energia: 1
+        };
+
+        let [novoPersonagemPrincipal, novoPersonagemInteracao] = await relacionarPersonagens(personagemPrincipal.id, personagemInteracao.id, interacao);
+        [novoPersonagemPrincipal, novoPersonagemInteracao] = await relacionarPersonagens(novoPersonagemPrincipal.id, novoPersonagemInteracao.id, interacao);
+
+        const tipoJoaoComAna = novoPersonagemPrincipal.relacionamentos[novoPersonagemInteracao.nome].tipo;
+        const tipoAnaComJoao = novoPersonagemInteracao.relacionamentos[novoPersonagemPrincipal.nome].tipo;
+        const tipoEsperado = "AMIZADE";
+
+        expect(tipoJoaoComAna).toBe(tipoEsperado)
+        expect(tipoAnaComJoao).toBe(tipoEsperado)
     })
 })
